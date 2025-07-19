@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier des Séances</title>
+
+    <!-- Inclure le CSS de FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+
+    <!-- Inclure Bootstrap pour le style -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Inclure Moment.js, nécessaire pour FullCalendar 3.x -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+
+    <!-- Inclure FullCalendar.js -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+
+    <style>
+        /* Personnalisation du calendrier */
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Calendrier des Séances</h2>
+    <div id="calendar"></div>
+</div>
+
+<!-- Inclure jQuery avant FullCalendar pour la gestion des événements -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialiser FullCalendar
+        $('#calendar').fullCalendar({
+            events: function(start, end, timezone, callback) {
+                // Récupérer les événements depuis l'API REST
+                $.ajax({
+                    url: '/api/seances', // URL de l'API REST
+                    dataType: 'json',
+                    success: function(data) {
+                        // Appeler le callback pour remplir le calendrier avec les événements
+                        callback(data);
+                    }
+                });
+            },
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            eventRender: function(event, element) {
+                // Ajouter un bouton de modification et de suppression à chaque événement
+                element.append("<i class='fas fa-edit' style='margin-left: 10px;'></i>");
+                element.append("<i class='fas fa-trash-alt' style='margin-left: 5px;'></i>");
+            }
+        });
+    });
+</script>
+
+<!-- Inclure Font Awesome pour les icônes -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Layout</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.0/font/bootstrap-icons.css}">
+
+<!-- jQuery et Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+<!-- Liens vers les fichiers CSS et JS pour jQuery UI avec WebJars -->
+<link th:href="@{/webjars/jquery-ui/1.14.0/jquery-ui.min.css}" rel="stylesheet" />
+<script th:src="@{/webjars/jquery-ui/1.14.0/jquery-ui.min.js}"></script>
+
+<!-- Inclure le CSS de Select2 via WebJars -->
+<!--<link rel="stylesheet" th:href="@{/webjars/select2/4.1.0-rc.0/css/select2.min.css}" /> -->
+
+<!-- Inclure le JavaScript de Select2 via WebJars -->
+<!--<script th:src="@{/webjars/select2/4.1.0-rc.0/js/select2.min.js}"></script> -->
+
+<link th:href="@{/css/select2.min.css}" rel="stylesheet" />
+<script th:src="@{/js/select2.min.js}"></script>
+
+
+
+
+<body>
+    <!-- Barre de navigation supérieure -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- Ajout de l'icône devant le texte -->
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/isetSfax.png}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                Gestion Emplois du Temps
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Notifications -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bell position-relative">
+                                <!-- Badge pour le nombre de notifications -->
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    3
+                                    <span class="visually-hidden">notifications non lues</span>
+                                </span>
+                            </i>
+                            Notifications
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><a class="dropdown-item" href="#">Notification 1</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 2</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 3</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Profil utilisateur -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/30" class="rounded-circle" alt="Profil" width="30"
+                                height="30"> Utilisateur
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Consulter le profil</a></li>
+                            <li><a class="dropdown-item" href="#">Changer le mot de passe</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Se déconnecter</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- Contenu principal -->
+
+    <!-- Menu accordéon (Barre latérale) -->
+    <!-- Contenu principal -->
+    <div class="container-fluid content">
+        <div class="row">
+            <!-- Menu accordéon (Barre latérale) -->
+            <nav class="col-md-2 bg-light py-3">
+                <div class="accordion" id="accordionSidebar">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Paramètres
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#accordionSidebar">
+                            <div class="accordion-body">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link"
+                                            th:href="@{/etablissements}">Etablissements</a></li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/departements}">Départements</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/grades}">Grades</a></li>
+
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/enseignants}">Enseignants</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/parcours}">Parcours</a></li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/groupes}">groupes</a></li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/salles}">Salles</a></li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/creneaux}">Crénaux Horaires</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/matieres}">Matières</a></li>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Menu 2
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#accordionSidebar">
+                            <div class="accordion-body">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/PlanEtudes}">Plan d'étude</a>
+                                    <li class="nav-item"><a class="nav-link" th:href="@{/emplois5}">Emplois du temps</a>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <!-- Première section avec les fragments -->
+         <!-- Première section avec les fragments -->
+        <main class="col-md-10 py-3">
+            <!-- Boutons horizontaux -->
+            <div th:replace="~{fragments/boutons :: boutonsHorizontaux}"></div>
+
+            <!-- Message Flash -->
+            <div th:replace="~{fragments/message :: message-flash}"></div>
+
+            <!-- Test ou contenu par défaut -->
+            <h2>Contenu par défaut</h2>
+            <p>Remplacez ce contenu dans vos pages enfants.</p>
+
+             <!-- Section où le contenu spécifique de la page enfant sera injecté -->
+      
+        </main>
+
+        <!-- Deuxième section où le contenu de la page enfant sera injecté -->
+      
+                <!-- Fragment principal -->
+                <main class="col-md-10 py-3" layout:fragment="content">
+                     
+                    <h2>Contenu par défaut</h2>
+                    <p>Remplacez ce contenu dans vos pages enfants.</p>
+                </main>
+         </div>
+         
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer>
+        <div class="container">
+            <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2024</span> N.M Tous droits réservés.
+            </p>
+        </div>
+    </footer>
+    <!-- Zone pour injecter les scripts spécifiques -->
+    <th:block layout:fragment="bottom-scripts">
+        <!-- Zone pour injecter les scripts globaux par défaut  -->
+        <script>
+            // Masquer automatiquement l'alerte après 5 secondes
+            setTimeout(function () {
+                let alertElement = document.querySelector('.alert');
+                if (alertElement) {
+                    alertElement.classList.remove('show');
+                    alertElement.classList.add('hide');
+                }
+            }, 5000); // 5000 ms = 5 secondes
+        </script>
+        <script>
+            let name = "Code JS Template";
+            console.log("Hellow:", name);
+
+        </script>
+
+    </th:block>
+</body>
+
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Consultation des emplois du temps</title>
+</head>
+
+<body>
+    <!-- Définition d'un fragment où le contenu de la page enfant sera inséré -->
+    <div layout:fragment="content">
+
+        <!-- Modal de Confirmation (Suppression) -->
+        <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteConfirmationLabel">Confirmer la Suppression</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalSeanceCoursId" name="SeanceCoursId">
+
+                        Êtes-vous sûr de vouloir supprimer cette séance ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <a th:href="@{/emplois5}" class="btn btn-danger">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+     
+        <div class="container mt-5">
+         
+            <!-- Carte de Recherche -->
+            <!-- Carte de Recherche avec Icône -->
+            <div class="row">
+                <!-- Carte de Recherche -->
+                <div class="col-lg-8"> <!-- 2/3 de la largeur -->
+
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">Recherche</h4>
+                            <!-- Icône pour masquer/afficher -->
+                            <button class="btn btn-link" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#rechercheCard" aria-expanded="true" aria-controls="rechercheCard">
+                                <i class="bi bi-chevron-down" id="chevronIcon"></i> <!-- Icône au début -->
+                            </button>
+                        </div>
+                        <div id="rechercheCard" class="collapse show">
+                            <div class="card-body">
+                                <form th:action="@{/emplois5}" method="get">
+                                    <div class="row">
+
+
+                                        <!-- Nom typeaffichage -->
+                                        <div class="col-md-2">
+                                            <label for="salle" class="form-label">Affichage</label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="typeaffichage" name="typeaffichage">
+                                                    <option th:each="typeaffichage : ${typeaffichages}"
+                                                        th:value="${typeaffichage}"
+                                                        th:selected="${typeaffichage == currentTypeaffichage}"
+                                                        th:text="${typeaffichage}">
+                                                    </option>
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+                                        <!-- Départements -->
+                                        <div class="col-md-2">
+                                            <label for="departement" class="form-label">Département</label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="departement" name="departement"
+                                                    onchange="loadGroupes()">
+                                                    <option value="" selected>Tout</option>
+                                                    <option value="Tout">Tous</option>
+                                                    <!-- Option "Tout" pour département -->
+                                                    <option th:each="dep : ${departements}" th:value="${dep}"
+                                                        th:text="${dep}">
+                                                    </option>
+                                                </select>
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                    id="clearDepartement"
+                                                    onclick="clearSelection('departement')">&times;</button>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Nom Groupe -->
+                                        <div class="col-md-2">
+                                            <label for="groupe" class="form-label">Nom Groupe</label>
+                                            <div class="input-group">
+                                                <select class="form-select" id="groupe" name="groupe">
+                                                    <!-- Option "Tout" pour groupe -->
+                                                </select>
+                                                <button type="button" class="btn btn-outline-secondary" id="clearGroupe"
+                                                    onclick="clearSelection('groupe')">&times;</button>
+                                            </div>
+                                        </div>
+
+
+
+                                        <!-- Nom SAlle -->
+                                        <div class="col-md-3">
+                                            <label for="salle" class="form-label">Nom Salle 1</label>
+                                            <input type="text" class="form-control" id="salle" name="salle"
+                                                th:value="${currentSalle}" placeholder="Nom salle">
+                                        </div>
+
+
+
+
+                                        <!-- Nom Enseignant -->
+                                        <div class="col-md-3">
+                                            <label for="enseignant" class="form-label">Nom Enseignant</label>
+                                            <input type="text" class="form-control" id="enseignant" name="enseignant"
+                                                th:value="${currentEnseignant}" placeholder="Nom Enseignant">
+                                        </div>
+
+
+
+
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-12 mt-3 d-flex justify-content-between align-items-center">
+                                            <!-- Bouton Rechercher (aligné à gauche) -->
+                                            <!-- Bouton Rechercher avec une icône Font Awesome (aligné à gauche) -->
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-search"></i> Visualiser Emplois du Temps
+                                            </button>
+
+                                            <!-- Boutons alignés à droite -->
+                                            <div class="d-flex">
+
+                                                <!--  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            Ouvrir le modal
+                                        </button>  -->
+
+                                                <!--  <th:block th:replace="~{fragments/modal :: modal('exampleModal', 'Confirmation', 'Voulez-vous vraiment confirmer cette action ?')}"></th:block> -->
+
+                                                <!-- Bouton Saisie nouvelle séance de cours -->
+                                                <!--  <button type="button" class="btn btn-info me-2">Saisie nouvelle séance de
+                                            cours</button>  -->
+
+                                                <!-- Bouton Export avec menu flottant -->
+                                                <div class="btn-group me-2">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Exporter
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item" href="#">
+                                                                <i class="bi bi-file-earmark-excel"></i> Exporter en
+                                                                Excel
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="#">
+                                                                <i class="bi bi-file-earmark-word"></i> Exporter en Word
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="#">
+                                                                <i class="bi bi-file-earmark-pdf"></i> Exporter en PDF
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- Bouton Télécharger en PDF -->
+                                                <button id="downloadPDF" class="btn btn-success">Télécharger en
+                                                    PDF</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- Carte de Statistique -->
+                <div class="col-lg-4"> <!-- 1/3 de la largeur -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">Statistique</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Total horaire -->
+                            <p><strong>Total Horaire :</strong> <span id="totalHoraire">45 heures</span></p>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte contenant le tableau -->
+            <div class="card" id="cardToPrint">
+                <div class="card-header text-center">
+                    <h5>
+                        Emploi du Temps
+                        <span th:text="${nom}"></span>
+                    </h5>
+
+                </div>
+                <div class="card-body">
+
+                    <div class="container mt-2">
+                        <!--     <h3 class="mb-4">Emploi du Temps SEM 31</h3> -->
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="table-secondary">Jour</th>
+                                    <th class="table-secondary">
+                                        <div class="row border">
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 1 <br>
+                                                    08:15-09:45</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 2<br>
+                                                    10:00-11:30</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 3<br>
+                                                    11:45-13:15</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 4<br>
+                                                    13:20-14:50</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 5
+                                                    <br>14:55-16:25</span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span class="badge border border-dark text-dark col-12">Séance 6 <br>
+                                                    16:30-18:00
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Iteration sur les jours de la semaine -->
+                                <tr th:each="entry : ${emploiDuTemps}">
+                                    <!-- Affichage du jour -->
+                                    <td class="col-1"><strong th:text="${entry.key}"></strong></td>
+                                    <td>
+                                        <div class="container">
+                                            <!-- Initialisation de la variable de suivi -->
+                                            <!-- <div th:with="previousNumero=-1">  -->
+
+                                            <!-- Iteration sur les numéros de ligne dans la sous-map -->
+                                            <div th:each="ligne : ${entry.value}">
+                                                <!-- Iteration sur les cellules de la ligne -->
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div th:each="cellule, celluleStat : ${ligne.value}"
+                                                            th:classappend="'col-' + ${cellule.taille} + ' ' +
+                                                            ((celluleStat.index == 0 and cellule.position == 0) ? '' : 'offset-' +  ${cellule.offset}) + 
+                                                            ' mt-2'">
+
+                                                            <div class="card">
+                                                                <!-- Nom de la matière -->
+                                                                <p class="card-header bg-light text-dark">
+                                                                    <span
+                                                                        class="badge border border-success text-success mt-2 text-wrap"
+                                                                        th:text="${cellule.nomMatiere}"></span>
+                                                                </p>
+                                                                <!-- Nom de l'enseignant -->
+                                                                <p class="card-body">
+
+
+                                                                    <span
+                                                                        th:if="${currentTypeaffichage != 'ENSEIGNANT'}"
+                                                                        class="badge bg-primary text-white mt-2 text-wrap"
+                                                                        th:text="${cellule.nomEnseignant}"></span>
+                                                                    <span
+                                                                        th:if="${currentTypeaffichage == 'ENSEIGNANT'}"
+                                                                        class="badge bg-primary text-white mt-2 text-wrap"
+                                                                        th:text="${cellule.nomGroupe}"></span>
+
+                                                                    <!--  <span th:if="${cellule.typeMatiere ==  0 }" class="badge bg-warning text-dark mt-2 text-wrap">Cours</span> -->
+                                                                    <span th:unless="${cellule.module == 0} "
+                                                                        class="badge bg-warning text-dark mt-2 text-wrap">module
+                                                                        : <span
+                                                                            th:text="${cellule.module}"></span></span>
+
+
+                                                                </p>
+                                                                <!-- Salle, autres détails, et actions -->
+                                                                <p class="card-footer bg-light text-dark">
+                                                                    <span th:if="${currentTypeaffichage != 'SALLE'}"
+                                                                        class="badge bg-info text-dark mt-2 text-wrap"
+                                                                        th:text="${cellule.nomSalle}"></span>
+                                                                    <span th:if="${currentTypeaffichage == 'SALLE'}"
+                                                                        class="badge bg-info text-dark mt-2 text-wrap"
+                                                                        th:text="${cellule.nomGroupe}"></span>
+                                                                    <span th:if="${cellule.par15}"
+                                                                        class="badge bg-warning text-dark mt-2 text-wrap">Par
+                                                                        15</span>
+
+                                                                    <span
+                                                                        class="badge bg-light text-dark mt-2 text-wrap"
+                                                                        th:text="${cellule.creneauHoraire}"></span>
+                                                                    <!-- Icônes Edit et Delete -->
+
+                                                                    <!-- Bouton Consulter -->
+
+                                                                    <a class="ms-2 text-success" title="Consulter"
+                                                                        data-bs-toggle="tooltip"
+                                                                        th:onclick="'showDeleteModal(' + ${cellule.id} + ')'">
+                                                                        <i class="bi bi-eye"></i>
+                                                                    </a>
+                                                                    <a class="ms-2 text-primary" title="Modifier"
+                                                                        data-bs-toggle="tooltip">
+                                                                        <i class="bi bi-pencil"></i>
+                                                                    </a>
+
+                                                                    <a class="ms-2 text-danger" title="Supprimer"
+                                                                        data-bs-toggle="tooltip"
+                                                                        th:onclick="'showModal(' + ${cellule.id} + ')'">
+                                                                        <i class="bi bi-trash"></i></a>
+
+
+
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                    </div>
+                </div>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+   
+ 
+</body>
+
+
+<th:block layout:fragment="bottom-scripts">
+  
+    <!-- Inclusion du fragment JavaScript -->
+    <th:block th:replace="~{fragments/emplois-js :: scripts}"></th:block>
+</th:block>
+
+
+</html>

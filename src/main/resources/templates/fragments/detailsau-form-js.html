@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <th:block th:fragment="scripts">
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const auSelect = document.getElementById("au");
+        const parcoursSelect = document.getElementById("parcours");
+        const planetudeSelect = document.getElementById("planetude");
+        const nomAbrInput = document.getElementById("nomabr");
+        const spinner = document.getElementById("spinner");
+
+        function updateNomAbrege() {
+          const selectedOption = parcoursSelect.options[parcoursSelect.selectedIndex];
+          if (selectedOption && selectedOption.value) {
+            nomAbrInput.value = selectedOption.text;
+          } else {
+            nomAbrInput.value = "";
+          }
+        }
+
+        function updatePlanEtudes() {
+          const parcoursId = parcoursSelect.value;
+          const auSelected = auSelect.options[auSelect.selectedIndex];
+          const annee = auSelected ? auSelected.textContent.match(/\d{4}/) : null;
+
+          planetudeSelect.innerHTML = "<option value=''>-- Sélectionner un plan d'étude --</option>";
+
+          if (!parcoursId || !annee) {
+            if (spinner) spinner.style.display = "none";
+            return;
+          }
+
+          if (spinner) spinner.style.display = "block";
+
+          // IMPORTANT : utiliser des backticks ` ` pour le template literal
+          fetch(`/api/byParcoursAndAnnee?parcoursId=${parcoursId}&annee=${annee[0]}`)
+            .then((response) => {
+              if (!response.ok) {
+                // Backticks aussi ici pour la chaîne interpolée
+                throw new Error(`Erreur HTTP : ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (Array.isArray(data)) {
+                data.forEach((p) => {
+                  const option = document.createElement("option");
+                  option.value = p.id;
+                  option.text = p.nomplanfr;
+                  planetudeSelect.appendChild(option);
+                });
+              } else {
+                throw new Error("Données reçues invalides");
+              }
+            })
+            .catch((error) => {
+              console.error("Erreur lors du chargement des plans d'étude :", error);
+              alert(
+                "Impossible de charger les plans d'étude. Vérifiez votre connexion ou contactez l'administrateur."
+              );
+            })
+            .finally(() => {
+              if (spinner) spinner.style.display = "none";
+            });
+        }
+
+        auSelect.addEventListener("change", updatePlanEtudes);
+        parcoursSelect.addEventListener("change", () => {
+          updateNomAbrege();
+          updatePlanEtudes();
+        });
+
+        // Remplir "Nom Abrégé" si un parcours est déjà sélectionné (utile pour le mode "modifier")
+        updateNomAbrege();
+      });
+    </script>
+
+    <script>
+/*
+        document.addEventListener("DOMContentLoaded", function () {
+    const planEtudeSelect = document.getElementById("planetude");
+    const niveauSelect = document.getElementById("niveau");
+    const spinner = document.getElementById("spinner");
+
+    planEtudeSelect.addEventListener("change", function () {
+        const planId = this.value;
+        if (!planId) return;
+
+        spinner.style.display = "block";
+
+        fetch(`/api/ecu/niveaux/${planId}`)
+            .then(response => response.json())
+            .then(niveaux => {
+                niveauSelect.innerHTML = '';
+                niveaux.forEach(n => {
+                    const option = document.createElement("option");
+                    option.value = n;
+                    option.textContent = `Niveau ${n}`;
+                    niveauSelect.appendChild(option);
+                });
+                spinner.style.display = "none";
+            })
+            .catch(error => {
+                console.error("Erreur lors du chargement des niveaux:", error);
+                spinner.style.display = "none";
+            });
+    });
+});
+*/
+    </script>
+  </th:block>
+</html>

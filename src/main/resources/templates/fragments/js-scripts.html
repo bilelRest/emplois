@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="global-scripts">
+        <!-- Scripts globaux utilisés par toutes les pages -->
+         
+        <script>
+            // Initialisation des tooltips pour l'ensemble du site
+            document.addEventListener('DOMContentLoaded', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            });
+        </script>
+    </th:block>
+
+    <th:block th:fragment="global-footer-scripts">
+        <!-- Scripts communs ajoutés en bas de toutes les pages -->
+        <script>
+            // Fonctionnalités globales du site
+            console.log("Scripts globaux chargés.");
+        </script>
+    </th:block>
+</head>
+</html>

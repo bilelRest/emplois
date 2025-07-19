@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+           <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${moduleCours.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/modulecours/save}" th:object="${moduleCours}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                     <!-- Champ Libellé Français -->
+                        <div class="mb-3">
+                            <label for="nommodulefr" class="form-label">Nom du module (Fr)</label>
+                            <input type="text" id="nommodulefr" th:field="*{nommodulefr}" class="form-control" placeholder="Saisissez le nom du module en français" required />
+                        </div>
+
+                        <!-- Champ Libellé Arabe -->
+                        <div class="mb-3">
+                            <label for="nommodulear" class="form-label">Nom du module (Ar) </label>
+                            <input type="text" id="nommodulear" th:field="*{nommodulear}" class="form-control" placeholder="Saisissez le nom du module en arabe" required />
+                        </div>
+<!-- Champ Modules (liste des entiers avec Select2) -->
+<div class="mb-3">
+    <label for="modules" class="form-label">Modules (Choix multiples)</label>
+    <select id="modules" th:field="*{modules}" multiple="multiple" class="form-select select2" required>
+        <option th:value="1" th:selected="${moduleCours.modules != null and moduleCours.modules.contains(1)}">1</option>
+        <option th:value="2" th:selected="${moduleCours.modules != null and moduleCours.modules.contains(2)}">2</option>
+        <option th:value="3" th:selected="${moduleCours.modules != null and moduleCours.modules.contains(3)}">3</option>
+    </select>
+</div>
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a th:href="@{/modulecours}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+<th:block layout:fragment="bottom-scripts">
+<!-- Inclusion du fragment JavaScript    -->
+ <th:block th:replace="~{fragments/modulecours-form-js :: scripts}"></th:block>
+
+</th:block>
+
+</body>
+
+
+</html>

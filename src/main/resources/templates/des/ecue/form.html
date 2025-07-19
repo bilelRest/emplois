@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+              
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${ecue.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/ecues/save}" th:object="${ecue}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+                    
+                        <div class="row">
+                            <!-- Plan d'Étude -->
+                            <div class="col-md-3 mb-3">
+                                <label for="planEtude" class="form-label">Plan d'Étude</label>
+                                <select id="planEtude" th:field="*{planEtude}" class="form-select">
+                                    <option th:each="plan : ${planEtudesExistants}" th:value="${plan.id}" th:text="${plan.nomplanfr}"></option>
+                                </select>
+                            </div>
+                    
+                            <!-- Parcours -->
+                            
+                            <div class="col-md-3 mb-3">
+                                <label for="parcours" class="form-label">Parcours</label>
+                                <select id="parcours" th:field="*{parcours}" class="form-select">
+                                ...  <!-- Parcours : <option th:each="parc : ${parcoursExistants}" th:value="${parc.id}" th:text="${parc.nomparcoursfr}"></option> -->  
+                                </select>
+                            </div>
+                               <!-- UE -->
+                               <div class="col-md-3 mb-3">
+                                <label for="ue" class="form-label">UE</label>
+                                <select  class="form-select" id="ue" th:field="*{ue}">
+                                    <option th:each="u : ${ueExistants}" th:value="${u.id}" th:text="${u.nomUE}"></option>
+                                </select>
+                            </div>
+                            <!-- Matière -->
+                            <div class="col-md-3 mb-3">
+                                <label for="matiere" class="form-label">Matière</label>
+                               <select class="form-select"  id="matiere" th:field="*{matiere}" >
+                                    <option th:each="mat : ${matieresExistants}" th:value="${mat.id}" th:text="${mat.nommatfr}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                              <!-- Ordre ECUE -->
+                              <div class="col-md-3 mb-3">
+                                <label for="ordreECUE" class="form-label">Ordre ECUE</label>
+                                <input type="number" id="ordreECUE" th:field="*{ordreECUE}" class="form-control" placeholder="Ordre" />
+                            </div>
+                           
+                    
+                            <!-- Crédit ECUE -->
+                            <div class="col-md-3 mb-3">
+                                <label for="creditECUE" class="form-label">Crédit ECUE</label>
+                                <input type="number" id="creditECUE" th:field="*{creditECUE}" class="form-control" placeholder="Crédit" step="0.01" required />
+                            </div>
+                    
+                            <!-- Coefficient ECUE -->
+                            <div class="col-md-3 mb-3">
+                                <label for="coefECUE" class="form-label">Coefficient ECUE</label>
+                                <input type="number" id="coefECUE" th:field="*{coefECUE}" class="form-control" placeholder="Coefficient" step="0.01" required />
+                            </div>
+                    
+                            <!-- Volume Horaire Total -->
+                            <div class="col-md-3 mb-3">
+                                <label for="volHTotal" class="form-label">Volume Horaire Total</label>
+                                <input type="number" id="volHTotal" th:field="*{volHTotal}" class="form-control" placeholder="Volume Horaire Total" step="0.01" required />
+                            </div>
+                        </div>
+                    
+                        <div class="row">
+                             <!-- Nom ECUE -->
+                             <div class="col-md-3 mb-3">
+                                <label for="nomEC" class="form-label">Nom de l'ECUE</label>
+                                <input type="text" id="nomEC" th:field="*{nomEC}" class="form-control" placeholder="Saisissez le nom de l'ECUE" required />
+                            </div>
+                            <!-- Volume Horaire Semaine Cours -->
+                            <div class="col-md-3 mb-3">
+                                <label for="volHSemaineCours" class="form-label">Volume Horaire Semaine (Cours)</label>
+                                <input type="number" id="volHSemaineCours" th:field="*{volHSemaineCours}" class="form-control" placeholder="Cours" step="0.01" />
+                            </div>
+                    
+                            <!-- Volume Horaire Semaine TD -->
+                            <div class="col-md-3 mb-3">
+                                <label for="volHSemaineTD" class="form-label">Volume Horaire Semaine (TD)</label>
+                                <input type="number" id="volHSemaineTD" th:field="*{volHSemaineTD}" class="form-control" placeholder="TD" step="0.01" />
+                            </div>
+                    
+                            <!-- Volume Horaire Semaine TP -->
+                            <div class="col-md-3 mb-3">
+                                <label for="volHSemaineTP" class="form-label">Volume Horaire Semaine (TP)</label>
+                                <input type="number" id="volHSemaineTP" th:field="*{volHSemaineTP}" class="form-control" placeholder="TP" step="0.01" />
+                            </div>
+                    
+                          
+                        </div>
+                    
+                        <div class="row">
+                            <!-- Semestre -->
+                            <div class="col-md-3 mb-3">
+                                <label for="semestre" class="form-label">Semestre</label>
+                                <select id="semestre" th:field="*{semestre}" class="form-select" required>
+                                    <option value="1" th:selected="*{semestre == 1}">Semestre 1</option>
+                                    <option value="2" th:selected="*{semestre == 2}">Semestre 2</option>
+                                </select>
+                            </div>
+                    
+                            <!-- Niveau -->
+                            <div class="col-md-3 mb-3">
+                                <label for="niveau" class="form-label">Niveau</label>
+                                <label for="niveau" class="form-label">Niveau</label>
+                                <select id="niveau" th:field="*{niveau}" class="form-select" required>
+                                    <option value="1" th:selected="*{niveau == 1}">1</option>
+                                    <option value="2" th:selected="*{niveau == 2}">2</option>
+                                    <option value="3" th:selected="*{niveau == 3}">3</option>
+                                </select>
+                             </div>
+                        </div>
+                    
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Enregistrer</button>
+                            <!-- Bouton Annuler -->
+                            <a href="/ecues" class="btn btn-secondary">Annuler</a>
+                        </div>
+                        
+                         
+                    </form>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<th:block layout:fragment="bottom-scripts">
+
+    <!-- Importation du fragment child-js -->
+    <th:block th:replace="~{fragments/ecue-form-js :: scripts}"></th:block>
+</th:block>
+
+
+</body>
+
+
+</html>

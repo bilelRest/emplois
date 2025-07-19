@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Calendrier des Séances</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.js"></script>
+</head>
+<body>
+
+<div id="calendar"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            allDaySlot: false,
+            slotMinTime: '08:00:00',
+            slotMaxTime: '18:00:00',
+            firstDay: 1,
+            hiddenDays: [0], // Cacher le dimanche
+            locale: 'fr',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            events: '/api/seances', // Charger les événements depuis le contrôleur REST
+            eventClick: function (info) {
+                // Code pour gérer la modification ou la suppression de l'événement
+                alert('Séance: ' + info.event.title);
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+
+</body>
+</html>

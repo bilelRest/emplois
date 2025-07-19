@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    <style>
+        #creneauxDiv {
+            width: 100%;
+        }
+    
+        #composedCreneaux {
+            width: 100% !important; /* S'assurer que Select2 occupe la largeur maximale */
+            min-height: 38px; /* Hauteur minimale similaire à celle d'un champ texte */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+        <section>
+            <div layout:fragment="content">
+               
+                <h2 th:text="${creneau.id == null ? 'Ajouter un Créneau Horaire' : 'Modifier un Créneau Horaire'}"></h2>
+
+                <div class="container mt-5">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0"
+                                th:text="${creneau.id == null ? 'Ajouter un nouveau créneau' : 'Modifier le créneau existant'}">
+                            </h4>
+                        </div>
+
+                        <div class="card-body">
+                            <form th:action="@{/creneaux/save}" th:object="${creneau}" method="post">
+                                <input type="hidden" th:field="*{id}" />
+
+                                <!-- Champs en grille (2 par ligne) -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="libelleFr" class="form-label">Libellé (Fr)</label>
+                                        <input type="text" id="libelleFr" th:field="*{libelleFr}" class="form-control"
+                                            placeholder="Saisissez le libellé en français" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="libelleAr" class="form-label">Libellé (Ar)</label>
+                                        <input type="text" id="libelleAr" th:field="*{libelleAr}" class="form-control"
+                                            placeholder="Saisissez le libellé en arabe" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <!-- Heure Début -->
+                                    <div class="col-md-3">
+                                        <label for="heureDebut" class="form-label">Heure Début</label>
+                                        <input type="time" id="heureDebut" th:field="*{heureDebut}" class="form-control"
+                                            required />
+                                    </div>
+
+                                    <!-- Heure Fin -->
+                                    <div class="col-md-3">
+                                        <label for="heureFin" class="form-label">Heure Fin</label>
+                                        <input type="time" id="heureFin" th:field="*{heureFin}" class="form-control"
+                                            required />
+                                    </div>
+
+                                    <!-- Heure Début Ramadan -->
+                                    <div class="col-md-3">
+                                        <label for="heureDebutRamadan" class="form-label">Heure Début (Ramadan)</label>
+                                        <input type="time" id="heureDebutRamadan" th:field="*{heureDebutRamadan}"
+                                            class="form-control" />
+                                    </div>
+
+                                    <!-- Heure Fin Ramadan -->
+                                    <div class="col-md-3">
+                                        <label for="heureFinRamadan" class="form-label">Heure Fin (Ramadan)</label>
+                                        <input type="time" id="heureFinRamadan" th:field="*{heureFinRamadan}"
+                                            class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <!-- Champ Durée -->
+                                    <div class="col-md-4">
+                                        <label for="dureeSeance" class="form-label">Durée de la Séance (heures)</label>
+                                        <input type="number" id="dureeSeance" th:field="*{dureeSeance}"
+                                            class="form-control" step="0.01" min="0" readonly />
+                                    </div>
+
+                                    <!-- Champ Position -->
+                                    <div class="col-md-4">
+                                        <label for="position" class="form-label">Position</label>
+                                        <input type="number" id="position" th:field="*{position}" class="form-control"
+                                            min="0" max="5" />
+                                    </div>
+
+                                    <!-- Champ Taille -->
+                                    <div class="col-md-4">
+                                        <label for="taille" class="form-label">Taille</label>
+                                        <input type="number" id="taille" th:field="*{taille}" class="form-control"
+                                            min="1" readonly />
+                                    </div>
+                                </div>
+
+
+                                <!-- Créneaux existants -->
+                                <div class="row mb-3 align-items-center">
+                                    <!-- Checkbox Compose -->
+                                    <div class="col-md-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="compose" th:field="*{compose}"
+                                                class="form-check-input" onclick="toggleCreneauxDiv()" />
+                                            <label for="compose" class="form-check-label">Composé</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sélection des créneaux existants -->
+                                    <div class="col-md-10" id="creneauxDiv">
+                                        <label for="composedCreneaux">Sélection des créneaux existants</label>
+                                        <select id="composedCreneaux" th:field="*{composedCreneaux}"
+                                            class="form-select select2" multiple="multiple">
+                                            
+                                            <option th:each="creneau : ${creneauxExistants}" th:value="${creneau.id}"
+                                                th:text="${creneau.libelleFr}"
+                                                th:selected="${composedCreneaux != null && #lists.contains(composedCreneaux, creneau)}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Boutons -->
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                    <a href="/creneaux" class="btn btn-secondary">Annuler</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+
+<th:block layout:fragment="bottom-scripts">
+
+    <!-- Importation du fragment child-js -->
+    <th:block th:replace="~{fragments/CreneauxHoraire-form-js :: scripts}"></th:block>
+</th:block>
+
+</html>

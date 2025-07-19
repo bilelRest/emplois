@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+        <section>
+            <div layout:fragment="content">
+
+                <div class="container mt-5">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0"
+                            th:text="${seancecours.id == 0 || seancecours.id == null ? 'Ajouter une Séance' : 'Modifier une Séance'}">
+                        </h4>    </div>
+ 
+                <div class="card-body">
+                    <form th:action="@{/seancecours}" th:object="${seancecours}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" id="id" name="id" th:value="*{id}" />
+
+                        <div class="row">
+                            <!-- Premier ligne : Année, Semestre, Département, Groupe -->
+                            <div class="col-md-3 mb-3">
+                                <label for="annee" class="form-label">Année</label>
+                                <input type="number" id="annee" name="annee" class="form-control" th:field="*{annee}"
+                                    th:value="${annee != null ? annee : #dates.format(#dates.createNow(), 'yyyy')}"
+                                    required>
+                                <div class="text-danger" th:errors="*{annee}"></div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label for="semestre" class="form-label">Semestre</label>
+                                <select id="semestre" name="semestre" class="form-select" th:field="*{semestre}" required>
+                                    <option value="1">Semestre 1</option>
+                                    <option value="2">Semestre 2</option>
+                                </select>
+                                <div class="text-danger" th:errors="*{semestre}"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="departement" class="form-label">Département</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="departement" name="departement" onchange="loadGroupes()">
+                                       <!--  <option value="" selected>Tout</option>
+                                        <option value="Tout">Tous</option> Option "Tout" pour département -->
+                                        <option th:each="dep : ${departements}" th:value="${dep}" th:text="${dep}"></option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-secondary" id="clearDepartement"
+                                        onclick="clearSelection('departement')">&times;</button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="groupe" class="form-label">Nom Groupe</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="groupe" name="groupe" onchange="loadMatieres()">
+                                        <!-- Les options seront ajoutées dynamiquement -->
+                                    </select>
+                                    <button type="button" class="btn btn-outline-secondary" id="clearGroupe"
+                                        onclick="clearSelection('groupe')">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <!-- Deuxième ligne : Jour de la semaine, créneau horaire, Enseignant, Salle -->
+                            <div class="col-md-3 mb-3">
+                                <label for="jourSemaine" class="form-label">Jour de la Semaine</label>
+                                <select id="jourSemaine" name="jourSemaine" class="form-select" th:field="*{jourSemaine}" required>
+                                    <option th:each="jour : ${jourSemaine}" th:value="${jour}" th:text="${jour}"></option>
+                                </select>
+                                <div class="text-danger" th:errors="*{jourSemaine}"></div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label for="creneauHoraire" class="form-label">Créneau Horaire</label>
+                                <select id="creneauHoraire" name="idCreneauHoraire" class="form-select" required>
+                                    <option th:each="cren : ${creneauxHoraires}" th:value="${cren}" th:text="${cren}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label for="enseignant" class="form-label">Nom Enseignant</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control" id="enseignant" name="enseignant" placeholder="Nom Enseignant">
+                                    <!-- Bouton de Recherche avec icône -->
+                                    <button type="button" class="btn btn-outline-secondary" id="searchEnseignant" disabled>
+                                        <i class="bi bi-search"></i> <!-- Icône de recherche Bootstrap -->
+                                    </button>    </div>
+                            </div>
+
+                            <div class="col-md-3  mb-3">
+                                <label for="salle" class="form-label">Nom Salle</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control" id="salle" name="salle" placeholder="Nom salle">
+                                 <!-- Bouton de Recherche avec icône -->
+          <!-- Bouton de Recherche avec icône -->
+          <button type="button" class="btn btn-outline-secondary" id="searchSalle" disabled>
+            <i class="bi bi-search"></i> <!-- Icône de recherche Bootstrap -->
+        </button>
+    </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <!-- Champ Matière (2 colonnes) -->
+                            <div class="col-md-6 mb-3">
+                                <label for="matiere" class="form-label">Matière</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="matiere" name="matiere">
+                                        <option value="">Sélectionner une Matière</option>
+                                    </select>
+                                    <button type="button" class="btn btn-outline-secondary" id="clearMatiere"
+                                        onclick="clearSelection('matiere')">&times;</button>
+                                </div>
+                            </div>
+                           
+                            <!-- Champ Par 15 jours (1 colonne) -->
+                            <div class="col-md-2 mb-3 form-check">
+                                <input type="checkbox" id="par15" name="par15" class="form-check-input">
+                                <label for="par15" class="form-check-label">Par 15 jours</label>
+                            </div>
+                       
+                           <!-- Champs Cours et Module dans une cellule (3 colonnes) -->
+<div class="col-md-4 mb-3">
+    <!-- Grille imbriquée pour aligner Cours et Module -->
+    <div class="row align-items-center">
+        <!-- Champ Cours -->
+        <div class="col-6 form-check">
+            <input type="checkbox" id="typeMatiere" name="typeMatiere" class="form-check-input" onchange="toggleModuleField()" checked>
+            <label for="typeMatiere" class="form-check-label">Cours</label>
+        </div>
+
+        <!-- Champ Module (masqué si Cours est coché) -->
+        <div class="col-6" id="moduleField">
+            <label for="module" class="form-label">Module</label>
+            <select id="module" name="idmodule" class="form-select" required>
+                <option th:each="module : ${modules}" th:value="${module}" th:text="${module}"></option>
+            </select>
+        </div>
+    </div>
+</div>
+
+                        </div>
+                        
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Enregistrer</button>
+                            <!-- Bouton Annuler -->
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<th:block layout:fragment="bottom-scripts">
+
+    <!-- Importation du fragment child-js     <th:block th:replace="~{fragments/ue-form-js :: scripts}"></th:block>-->
+
+</th:block>
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="DepartementsReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e1c0b0a6-df1b-4f4a-9fa2-8b2f534f77b8">
+
+    <!-- Parameters -->
+    <parameter name="ReportTitle" class="java.lang.String"/>
+
+    <!-- Query for fetching data -->
+    <queryString>
+        <![CDATA[
+        SELECT id, nomdepfr, nomdepar
+        FROM Departement
+        ORDER BY nomdepfr ASC
+        ]]>
+    </queryString>
+
+    <!-- Fields -->
+    <field name="id" class="java.lang.Long"/>
+    <field name="nomdepfr" class="java.lang.String"/>
+    <field name="nomdepar" class="java.lang.String"/>
+
+    <!-- Title Band -->
+    <title>
+        <band height="50">
+            <textField>
+                <reportElement x="0" y="0" width="515" height="30" uuid="56d343c8-4cb4-4729-a648-4c0c3a67a9eb"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <!-- Column Header -->
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement x="0" y="0" width="50" height="20" uuid="72e456ab-33ab-4b65-a3bb-6e02b56b3074"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="50" y="0" width="250" height="20" uuid="fbc2e96c-9319-4823-94df-6e1e5d8c95d7"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nom Département (Français)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="300" y="0" width="250" height="20" uuid="d6b6f3f8-843c-485b-aac7-5e5c4d9ff4b5"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Nom Département (Arabe)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- Detail Band -->
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="50" height="20" uuid="8df60b15-e183-4b5d-92c9-4e374b3e5c3f"/>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="250" height="20" uuid="b6adf0c9-d15a-4c6f-b5a8-f514e4a508c8"/>
+                <textFieldExpression><![CDATA[$F{nomdepfr}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="0" width="250" height="20" uuid="b9c5f0d8-a9b2-4379-8c25-efc3ae13dc89"/>
+                <textFieldExpression><![CDATA[$F{nomdepar}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <!-- Page Footer -->
+    <pageFooter>
+        <band height="20">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="20" uuid="cf3e6c2e-f471-4d9d-8775-4315f1e4a1b3"/>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[Page ]]></text>
+            </staticText>
+        </band>
+    </pageFooter>
+</jasperReport>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${role.roleId == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/roles/save}" th:object="${role}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{roleId}" />
+
+                        <!-- Champ Libellé Français -->
+                        <div class="mb-3">
+                            <label for="roleName" class="form-label">Nom du rôle</label>
+                            <input type="text" id="nommatfr" th:field="*{roleName}" class="form-control" placeholder="Saisissez le nom du département en français" required />
+                        </div>
+
+                        <!-- Champ Libellé Arabe -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description </label>
+                            <input type="text" id="description" th:field="*{description}" class="form-control" placeholder="Saisissez le nom du département en arabe" required />
+                        </div>
+ <!-- ChampListe des menus -->
+ <div class="mb-3">
+    <div class="col-md-12">
+        <label for="menusExistants">Sélection des menus </label>
+        <select id="menusExistants" th:field="*{menus}"
+            class="form-select select2" multiple="multiple">
+            <option th:each="menu : ${menusExistants}" th:value="${menu.id}"
+                th:text="${menu.title}"
+                th:selected="${menus != null && menus.contains(menu)}">
+            </option>
+        </select>
+    </div>
+</div>
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/roles" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+ 
+
+</body>
+<th:block layout:fragment="bottom-scripts">
+
+    <th:block th:replace="~{fragments/role-form-js :: scripts}"></th:block>  
+</th:block>
+
+</html>

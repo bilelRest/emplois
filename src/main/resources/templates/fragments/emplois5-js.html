@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+        <script>
+            // Fonction pour ouvrir le modal de modification du statut
+            function showModal(id) {
+                if (id == null) id = -1;
+                console.log('Cellule id ');
+                console.log('  id: ' + id);
+                // Assignez l'ID du paquet au champ caché du formulaire ou à l'élément requis
+                document.getElementById("modalSeanceCoursId").value = id;
+
+                // Affichez le modal
+                const modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                modal.show();
+            }
+
+            // Initialisation des tooltips
+            document.addEventListener('DOMContentLoaded', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            });
+        </script>
+        <script>
+            console.log("Scripts spécifiques emplois 5 sont chargés.");
+        </script>
+        
+<script>
+    document.getElementById("downloadPDF").addEventListener("click", () => {
+        const card = document.getElementById("cardToPrint");
+    
+        const options = {
+            margin: 1, // Marges en pouces
+            filename: 'emploi_du_temps.pdf', // Nom du fichier
+            image: { type: 'jpeg', quality: 0.98 }, // Qualité de l'image
+            html2canvas: { scale: 2 }, // Meilleure résolution pour le rendu
+            jsPDF: { unit: 'in', format: [11, 8.5], orientation: 'landscape' } // Taille personnalisée pour forcer le mode paysage
+        };
+    
+        // Génération du PDF
+        html2pdf()
+            .set(options)
+            .from(card)
+            .get('pdf') 
+            .then((pdf) => {
+           
+                const zoomFactor = 0.75; 
+                const originalWidth = pdf.internal.pageSize.getWidth();
+                const originalHeight = pdf.internal.pageSize.getHeight();
+                pdf.internal.pageSize.setWidth(originalWidth * zoomFactor);
+                pdf.internal.pageSize.setHeight(originalHeight * zoomFactor);
+            })
+            .save(); // Télécharge le fichier PDF
+    });
+    
+    </script>
+
+    </th:block>
+</html>

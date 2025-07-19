@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${au.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/aus/save}" th:object="${au}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+                         <!-- Ligne pour l'année -->
+                            <div class="row mb-3">
+    <!-- nomaufr -->
+    <div class="col-md-2">
+                                <label for="annee" class="form-label">Année</label>
+                                <input type="number" id="annee" th:field="*{annee}" class="form-control"
+                                       placeholder="Entrez l'année" required />
+                            </div>         
+                        
+                        
+                        
+    <!-- nomaufr -->
+    <div class="col-md-5">
+        <label for="nomaufr" class="form-label">Année Universitaire (Fr)</label>
+        <input type="text" id="nomaufr" th:field="*{nomaufr}" class="form-control"
+               placeholder="Saisissez l'année universitaire en français" required />
+    </div>
+
+    <!-- nomauar -->
+    <div class="col-md-5">
+        <label for="nomauar" class="form-label">Année Universitaire (Ar)</label>
+        <input type="text" id="nomauar" th:field="*{nomauar}" class="form-control"
+               placeholder="سنة جامعية بالعربية" required />
+    </div>
+</div>
+
+                        <!-- Ligne contenant actif/verrouille (à gauche) + description (à droite) -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="d-flex flex-column">
+            <div class="form-check mb-2">
+                <input type="checkbox" id="actif" th:field="*{actif}" class="form-check-input" />
+                <label class="form-check-label" for="actif">Actif</label>
+            </div>
+             <div class="form-check mb-2">
+                <input type="checkbox" id="visible" th:field="*{visible}" class="form-check-input" />
+                <label class="form-check-label" for="visible">Visible</label>
+            </div>
+
+            <div class="form-check mb-2">
+                <input type="checkbox" id="verrouille" th:field="*{verrouille}" class="form-check-input" />
+                <label class="form-check-label" for="verrouille">Verrouillé</label>
+            </div>
+             <div class="form-check mb-2">
+                                        <input type="checkbox" id="semestre1" th:field="*{semestre1}" class="form-check-input" />
+                                        <label class="form-check-label" for="semestre1">Semestre 1</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" id="semestre2" th:field="*{semestre2}" class="form-check-input" />
+                                        <label class="form-check-label" for="semestre2">Semestre 2</label>
+                                    </div>
+        </div>
+    </div>
+
+    <!-- Colonne droite : description -->
+    <div class="col-md-9">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" th:field="*{description}" class="form-control"
+                  placeholder="Ajouter une description..." rows="3"></textarea>
+    </div>
+</div>
+
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/aus" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+<th:block layout:fragment="bottom-scripts">
+
+    <!-- Importation du fragment child-js -->
+    <th:block th:replace="~{fragments/au-form-js :: scripts}"></th:block>
+</th:block>
+</body>
+
+
+</html>

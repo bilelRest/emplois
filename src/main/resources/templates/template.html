@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Application</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.0/font/bootstrap-icons.css}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">AppName</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link">Bienvenue, <span th:text="${username}"></span></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Changer mot de passe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/logout}">Se déconnecter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Menu accordéon -->
+            <div class="col-md-3">
+                <div class="accordion" id="menuAccordion">
+                    <div th:each="menu : ${menus}" class="accordion-item">
+                        <h2 class="accordion-header" id="heading-${menu.id}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    th:attr="aria-expanded=${menu.expanded}"
+                                    th:attr="aria-controls=collapse-${menu.id}" th:text="${menu.title}">
+                            </button>
+                        </h2>
+                        <div th:id="collapse-${menu.id}" class="accordion-collapse collapse"
+                             th:classappend="${menu.expanded ? ' show' : ''}"
+                             th:attr="aria-labelledby=heading-${menu.id}" data-bs-parent="#menuAccordion">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li th:each="subMenu : ${menu.subMenus}">
+                                        <a th:href="${subMenu.url}" th:text="${subMenu.title}"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenu spécifique -->
+            <div class="col-md-9">
+                <div th:insert="~{::main}"></div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

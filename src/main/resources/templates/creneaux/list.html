@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    <th:block th:replace="~{fragments/CreneauxHoraire-list-js :: scripts}"></th:block>    
+  </head>
+ <body>
+    <section>
+        <div layout:fragment="content">
+          
+            <div class="container mt-5">
+                <!-- Carte pour la recherche -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Recherche de créneaux</h5>
+                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#searchCard" aria-expanded="true" aria-controls="searchCard">
+                            <i class="bi bi-search"></i> Afficher/Masquer
+                        </button>
+                    </div>
+                    <div id="searchCard" class="collapse">
+                        <div class="card-body">
+                            <form th:action="@{/creneaux/search}" method="get">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="libelleFr" class="form-label">Libellé</label>
+                                        <input type="text" id="libelleFr" name="libelleFr" class="form-control" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="heureDebut" class="form-label">Heure Début</label>
+                                        <input type="time" id="heureDebut" name="heureDebut" class="form-control" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="heureFin" class="form-label">Heure Fin</label>
+                                        <input type="time" id="heureFin" name="heureFin" class="form-control" />
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carte pour la liste des créneaux -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Affichage</h5>
+                        <!-- Sélecteur de taille de page au centre -->
+        <div class="d-flex align-items-center">
+          
+            <select class="form-select" id="pageSize" onchange="updatePageSize()">
+                <option value="5" th:selected="${pageSize == 5}">5</option>
+                <option value="10" th:selected="${pageSize == 10}">10</option>
+                <option value="15" th:selected="${pageSize == 15}">15</option>
+            </select>
+        </div>
+                        <a th:href="@{/creneaux/create}" class="btn btn-success">Créer un nouveau créneau</a>
+                    </div>
+                    <div class="card-body">
+                        
+
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Libellé (Fr)</th>
+                                    <th>Heure Début</th>
+                                    <th>Heure Fin</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             
+                                <tr th:each="creneau : ${creneaux.content}">
+                                    <td th:text="${creneau.id}"></td>
+                                    <td th:text="${creneau.libelleFr}"></td>
+                                    <td th:text="${creneau.heureDebut}"></td>
+                                    <td th:text="${creneau.heureFin}"></td>
+                                    <td>
+                                      <!-- Bouton Consulter (affiché uniquement si creneau.compose est vrai) -->
+<a th:if="${creneau.compose}" 
+th:href="@{/creneaux/consulter/{id}(id=${creneau.id})}" 
+class="btn btn-info btn-sm"
+data-bs-toggle="tooltip" 
+title="Consulter">
+ <i class="bi bi-eye"></i>
+</a>
+
+<!-- Bouton Modifier (remplacé par une icône) -->
+<a th:href="@{/creneaux/edit/{id}(id=${creneau.id})}" 
+class="btn btn-warning btn-sm"
+data-bs-toggle="tooltip" 
+title="Modifier">
+ <i class="bi bi-pencil"></i>
+</a>
+
+<!-- Bouton Supprimer (remplacé par une icône) -->
+<button type="button" 
+        class="btn btn-danger btn-sm" 
+        data-bs-toggle="modal" 
+        data-bs-target="#confirmDeleteModal" 
+        th:attr="data-id=${creneau.id}" 
+        title="Supprimer">
+    <i class="bi bi-trash"></i>
+</button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                      <!-- Pagination -->
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${creneaux.first} ? 'disabled'">
+            <a class="page-link" th:href="@{/creneaux(page=0, size=${pageSize})}">
+                <i class="bi bi-chevron-double-left"></i>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${creneaux.hasPrevious()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/creneaux(page=${creneaux.number - 1}, size=${pageSize})}">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+        </li>
+
+        <li class="page-item disabled">
+            <span class="page-link">Page <span th:text="${creneaux.number + 1}"></span> sur <span th:text="${creneaux.totalPages}"></span></span>
+        </li>
+
+        <li class="page-item" th:classappend="${creneaux.hasNext()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/creneaux(page=${creneaux.number + 1}, size=${pageSize})}">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${creneaux.last} ? 'disabled'">
+            <a class="page-link" th:href="@{/creneaux(page=${creneaux.totalPages - 1}, size=${pageSize})}">
+                <i class="bi bi-chevron-double-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+            
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modale de confirmation de suppression -->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Êtes-vous sûr de vouloir supprimer ce créneau ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <form th:action="@{/creneaux/delete/{id}(id=)}" method="post">
+                                <input type="hidden" id="deleteId" name="id" />
+                                <button type="submit" class="btn btn-danger">Confirmer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+ 
+</html>

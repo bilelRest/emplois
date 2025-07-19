@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+           <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${enseignant.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/enseignants/save}" th:object="${enseignant}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Nom et Prénom (Fr et Ar) sur la même ligne -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="nomenseignant" class="form-label">Nom de l'enseignant (Fr)</label>
+                                <input type="text" id="nomenseignant" th:field="*{nomenseignant}" class="form-control" placeholder="Saisissez le nom de l'enseignant en français" required />
+                            </div>
+                            <div class="col">
+                                <label for="nomenseignantar" class="form-label">Nom de l'enseignant (Ar)</label>
+                                <input type="text" id="nomenseignantar" th:field="*{nomenseignantar}" class="form-control" placeholder="Saisissez le nom de l'enseignant en arabe" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="prenomenseignant" class="form-label">Prénom de l'enseignant (Fr)</label>
+                                <input type="text" id="prenomenseignant" th:field="*{prenomenseignant}" class="form-control" placeholder="Saisissez le prénom de l'enseignant en français" />
+                            </div>
+                            <div class="col">
+                                <label for="prenomenseignantar" class="form-label">Prénom de l'enseignant (Ar)</label>
+                                <input type="text" id="prenomenseignantar" th:field="*{prenomenseignantar}" class="form-control" placeholder="Saisissez le prénom de l'enseignant en arabe" />
+                            </div>
+                        </div>
+
+                        <!-- Adresse, Tel, Mail et Actif sur la même ligne -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="adresse" class="form-label">Adresse</label>
+                                <input type="text" id="adresse" th:field="*{adresse}" class="form-control" placeholder="Saisissez l'adresse de l'enseignant" />
+                            </div>
+                            <div class="col">
+                                <label for="tel" class="form-label">Téléphone</label>
+                                <input type="tel" id="tel" th:field="*{tel}" class="form-control" placeholder="Saisissez le téléphone" />
+                            </div>
+                            <div class="col">
+                                <label for="mail" class="form-label">Email</label>
+                                <input type="email" id="mail" th:field="*{mail}" class="form-control" placeholder="Saisissez l'email" required />
+                            </div>
+                            <div class="col">
+                                <label for="actif" class="form-label">Actif</label>
+                                <input type="checkbox" id="actif" th:field="*{actif}" class="form-check-input" />
+                                <span class="ms-2">L'enseignant est actif</span>
+                            </div>
+                        </div>
+
+                        <!-- Grade et Statut sur la même ligne -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="grade" class="form-label">Grade</label>
+                                <select id="grade" th:field="*{grade.id}" class="form-select" required>
+                                    <option value="" th:text="'-- Sélectionner un grade --'"></option>
+                                    <option th:each="grade : ${gradesList}" th:value="${grade.id}" th:text="${grade.nomgradefr}"></option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="status" class="form-label">Statut</label>
+                                <select id="status" th:field="*{status.id}" class="form-select" required>
+                                    <option value="" th:text="'-- Sélectionner un statut --'"></option>
+                                    <option th:each="status : ${statutsList}" th:value="${status.id}" th:text="${status.nomstatusfr}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/enseignants" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- Inclusion du fragment JavaScript    <th:block th:replace="~{fragments/departements-form-js :: scripts}"></th:block>-->
+
+
+
+</body>
+
+
+</html>

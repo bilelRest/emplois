@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${submenu.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/submenus/save}" th:object="${submenu}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+                    
+                        <!-- Champ Titre -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titre</label>
+                            <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Saisissez le titre du sous-menu" required />
+                        </div>
+                    
+                        <!-- Champ Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" id="description" th:field="*{description}" class="form-control" placeholder="Saisissez la description du sous-menu" required />
+                        </div>
+                    
+                        <!-- Champ URL -->
+                        <div class="mb-3">
+                            <label for="url" class="form-label">URL</label>
+                            <input type="text" id="url" th:field="*{url}" class="form-control" placeholder="Saisissez l'URL vers laquelle le sous-menu pointe" />
+                        </div>
+                    
+                        <!-- Champ Icône -->
+                        <div class="mb-3">
+                            <label for="icon" class="form-label">Icône</label>
+                            <input type="text" id="icon" th:field="*{icon}" class="form-control" placeholder="Saisissez le nom de l'icône (ex: 'fa-user')" />
+                        </div>
+                    
+                        <!-- Champ Position -->
+                        <div class="mb-3">
+                            <label for="position" class="form-label">Position</label>
+                            <input type="number" id="position" th:field="*{position}" class="form-control" placeholder="Saisissez la position du sous-menu" required />
+                        </div>
+                    
+                        <!-- Sélection du Menu Parent -->
+                        <div class="mb-3">
+                            <label for="menu" class="form-label">Menu Parent</label>
+                            <select id="menu" th:field="*{menu}" class="form-select">
+                                <option th:each="menuItem : ${menusExistants}" 
+                                        th:value="${menuItem.id}" 
+                                        th:text="${menuItem.title}" 
+                                        th:selected="${menu != null && menu.id == menuItem.id}">
+                                </option>
+                            </select>
+                        </div>
+                    
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/submenus" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+ 
+
+</body>
+<th:block layout:fragment="bottom-scripts">
+
+    <th:block th:replace="~{fragments/role-form-js :: scripts}"></th:block>  
+</th:block>
+
+</html>

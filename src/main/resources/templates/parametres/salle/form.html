@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+               <h2 th:text="${salle.id == null ? 'Ajouter  ' : 'Modifier  '}"></h2>
+
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${salle.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/salles/save}" th:object="${salle}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Champ Libellé Français -->
+                        <div class="mb-3">
+                            <label for="nomsalle" class="form-label">Nom de la salle</label>
+                            <input type="text" id="nomsalle" th:field="*{nomsalle}" class="form-control" placeholder="Saisissez le nom de la salle en français" required />
+                        </div>
+
+                        <!-- Champ Libellé Arabe -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description de la salle</label>
+                            <input type="text" id="description" th:field="*{description}" class="form-control" placeholder="description"  />
+                        </div>
+
+                          <!-- Champ Choix Département -->
+                          <div class="mb-3">
+                            <label for="depExistants">Sélection des département </label>
+                            <select id="depExistants" th:field="*{departements}" class="form-select select2" multiple="multiple">
+                                <option th:each="dep : ${depExistants}" th:value="${dep.id}"
+                                    th:text="${dep.nomdepfr}"
+                                    th:selected="${departements != null && departements.contains(dep)}">
+                                </option>
+                            </select>     </div>
+
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/salles" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<th:block layout:fragment="bottom-scripts">
+
+    <!-- Importation du fragment child-js -->
+    <th:block th:replace="~{fragments/salle-form-js :: scripts}"></th:block>
+</th:block>
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+       
+          <script  th:inline="javascript">
+
+       
+            $(document).ready(function () {
+                // Initialisation de Select2
+                $('#parcoursExistants').select2({
+                    width: '100%', 
+                    placeholder: "Aucun parcours disponible",
+                    allowClear: true // Permet de supprimer la sélection si nécessaire
+                });
+            });
+    
+ 
+/*
+$(document).ready(function () {
+    $('#matiere').select2({
+      placeholder: "Choisir une matière",
+      allowClear: true,
+      width: '100%' // pour que le select prenne toute la largeur du parent
+    });
+  });
+
+            $(document).ready(function () {
+                // Initialisation de Select2
+                $('#planEtude').select2({
+                    width: '100%', 
+                    placeholder: "Aucun plan étude disponible",
+                    allowClear: true // Permet de supprimer la sélection si nécessaire
+                });
+            });
+     
+      
+*/
+ 
+    </script>
+    
+    
+
+       
+     
+
+</th:block>
+</html>

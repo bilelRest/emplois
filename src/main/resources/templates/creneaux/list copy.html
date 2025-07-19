@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    
+</head>
+<section>
+    <div layout:fragment="content">
+
+          <!-- Insertion du fragment des boutons horizontaux -->
+          <div th:replace="~{fragments/boutons :: boutonsHorizontaux}"></div>
+          <h2>Liste des créneaux horaires</h2>
+
+        <div class="container mt-5">
+            <!-- Carte pour la recherche -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Recherche de créneaux</h5>
+                    <button class="btn btn-link float-end" type="button" data-bs-toggle="collapse" data-bs-target="#searchCard" aria-expanded="true" aria-controls="searchCard">
+                        <i class="bi bi-search"></i> Afficher/Masquer
+                    </button>
+                </div>
+                <div id="searchCard" class="collapse">
+                    <div class="card-body">
+                        <form th:action="@{/creneaux/search}" method="get">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="libelleFr" class="form-label">Libellé</label>
+                                    <input type="text" id="libelleFr" name="libelleFr" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="heureDebut" class="form-label">Heure Début</label>
+                                    <input type="time" id="heureDebut" name="heureDebut" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="heureFin" class="form-label">Heure Fin</label>
+                                    <input type="time" id="heureFin" name="heureFin" class="form-control" />
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte pour la liste des créneaux -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Liste des Créneaux Horaires</h5>
+                    <a href="/creneaux/create" class="btn btn-success">Créer un nouveau créneau</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Libellé (Fr)</th>
+                                <th>Heure Début</th>
+                                <th>Heure Fin</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="creneau : ${creneaux}">
+                                <td th:text="${creneau.id}"></td>
+                                <td th:text="${creneau.libelleFr}"></td>
+                                <td th:text="${creneau.heureDebut}"></td>
+                                <td th:text="${creneau.heureFin}"></td>
+                                <td>
+                                    <a th:href="@{/creneaux/edit/{id}(id=${creneau.id})}" class="btn btn-warning btn-sm">Modifier</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" th:attr="data-id=${creneau.id}">
+                                        Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale de confirmation de suppression -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation de suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir supprimer ce créneau ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <form th:action="@{/creneaux/delete/{id}(id=)}" method="post">
+                            <input type="hidden" id="deleteId" name="id" />
+                            <button type="submit" class="btn btn-danger">Confirmer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Script pour injecter l'ID dans la modale
+    document.addEventListener('DOMContentLoaded', () => {
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Bouton qui a déclenché la modale
+            const id = button.getAttribute('data-id'); // Récupérer l'ID à partir des attributs de données
+            const deleteInput = document.getElementById('deleteId'); // Champ caché pour l'ID
+            deleteInput.value = id;
+        });
+    });
+</script>
+
+</html>

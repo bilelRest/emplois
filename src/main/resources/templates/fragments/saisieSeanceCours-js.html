@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scriptsSeanceCours">
+        <script>
+            function toggleModuleField() {
+                const isCoursChecked = document.getElementById("typeMatiere").checked;
+                const moduleField = document.getElementById("moduleField");
+        
+                // Masquer ou afficher en fonction de l'état de la case
+                if (isCoursChecked) {
+                    moduleField.style.display = "none"; // Masquer
+                } else {
+                    moduleField.style.display = "block"; // Afficher
+                }
+            }
+        
+            // Initialisation au chargement de la page
+            document.addEventListener("DOMContentLoaded", () => {
+                toggleModuleField(); // S'assurer que l'état initial est correct
+            });
+        </script>
+        
+
+</th:block>
+</html>

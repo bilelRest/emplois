@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{template1}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${detailsgroupeau.id == null ? 'Ajouter un détail' : 'Modifier un détail'}">Formulaire</title>
+</head>
+<body>
+<section layout:fragment="content">
+
+    
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0" th:text="${detailsgroupeau.id == null ? 'Ajouter un détail de groupe' : 'Modifier un détail de groupe'}"></h4>
+            </div>
+
+            <div class="card-body">
+                <form th:action="@{/detailsgroupeaus/save}" th:object="${detailsgroupeau}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+
+                   
+
+                    <!-- Ligne 1: Année, Semestre -->
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <label for="annee" class="form-label">Année</label>
+                            <input type="number" id="annee" th:field="*{annee}" class="form-control" 
+                                   th:value="${detailsgroupeau.annee != null ? detailsgroupeau.annee : #dates.format(#dates.createNow(), 'yyyy')}" required/>
+                            <div class="text-danger" th:errors="*{annee}"></div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="semestre" class="form-label">Semestre</label>
+                            <select id="semestre" th:field="*{semestre}" class="form-select" required>
+                                <option value="1">Semestre 1</option>
+                                <option value="2">Semestre 2</option>
+                            </select>
+                            <div class="text-danger" th:errors="*{semestre}"></div>
+                        </div>
+                         <div class="col-md-2">
+                            <label for="departement" class="form-label">Département</label>
+                            <select id="departement"  name="departement" class="form-select" required>
+                                <option th:each="d : ${departementList}" th:value="${d.id}" th:text="${d.nomdepfr}"></option>
+                            </select>
+                        </div>
+                         <div class="col-md-2">
+                            <label for="groupeau" class="form-label">Groupe AU</label>
+                           <select id="groupeau" name="groupeau" th:field="*{groupeAU.id}" class="form-select" required>
+  <!--  <option value="" disabled selected>-- Sélectionner un groupe --</option>   -->  
+        <option th:each="g : ${groupeauList}" th:value="${g.id}" th:text="${g.nomgroupe}"></option>
+                         
+</select>
+                        </div>
+
+                         <div class="col-md-4">
+                             <!-- Spinner global -->
+    <div id="spinner" class="text-center d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+    </div>
+
+                            <label for="ecue" class="form-label">ECUE</label>
+                           <select id="ecue" name="ecue" th:field="*{ecue.id}" class="form-select" required>
+    <option value="" disabled selected>-- Choisir une ECUE --</option>
+</select>
+                        </div>
+                    </div>
+
+                     <!-- Ligne 2: Département, Groupe -->
+                    <div class="row mb-3">
+
+                         <div class="col-md-2">
+                            <label for="jourSemaine" class="form-label">Jour de la semaine</label>
+                            <select id="jourSemaine" th:field="*{jourSemaine}" class="form-select" required>
+                                <option value="" disabled selected>-- Choisir --</option>
+                                <option th:each="j : ${jourSemaine}" th:value="${j}" th:text="${j}"></option>
+                            </select>
+                            <div class="text-danger" th:errors="*{jourSemaine}"></div>
+                        </div>
+
+ <div class="col-md-2">
+    <label for="creneau" class="form-label">Créneau horaire</label>
+    <select id="creneau" class="form-select" th:field="*{creneau.id}" name="creneau.id" required>
+        <option value="" disabled selected>-- Choisir un créneau --</option>
+        <option th:each="c : ${creneauHoraireList}" th:value="${c.id}" th:text="${c.libelleFr}"></option>
+    </select>
+</div>
+
+ <div class="col-md-2">
+    <label for="salle" class="form-label">Salle</label>
+
+    <div class="d-flex align-items-center">
+        <select id="salle" class="form-select flex-grow-1 me-2" th:field="*{salle.id}" name="salle.id" required>
+            <option value="" disabled selected>-- Choisir une salle --</option>
+            <option th:each="s : ${salleList}" th:value="${s.id}" th:text="${s.nomsalle}"></option>
+        </select>
+
+        <button type="button" class="btn btn-outline-secondary" id="searchSallet">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+
+ </div>
+ <!-- Nom Enseignant -->
+                                    <div class="col-md-6">
+  <label for="enseignant" class="form-label">Nom Enseignant</label>
+  
+  <div class="d-flex align-items-center">
+    <select class="form-select flex-grow-1 me-2" th:field="*{enseignant.id}" id="enseignant" name="enseignant.id">
+      <option value="">-- Choisir un enseignant --</option>
+      <option th:each="ens : ${enseignantList}" 
+              th:value="${ens.id}" 
+              th:text="${ens.prenomenseignant} + ' ' + ${ens.nomenseignant}">
+      </option>
+    </select>
+    
+    <button type="button" class="btn btn-outline-secondary" id="searchEnseignant">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+</div>
+
+
+  
+                 
+                       
+                    </div>
+
+
+                    
+
+                    
+<!-- Ajoute ces sections dans ton formulaire, idéalement avant le bouton "Enregistrer" -->
+
+<div class="row mb-3">
+    <div class="col-md-2">
+        <label for="numeroLigneTableau" class="form-label">N° Ligne Tableau</label>
+        <input type="number" th:field="*{numeroLigneTableau}" class="form-control"/>
+    </div>
+
+    <div class="col-md-4">
+        <label for="styleBootStrap" class="form-label">Style Bootstrap</label>
+        <input type="text" th:field="*{styleBootStrap}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Autre Séance</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" th:field="*{autreSeance}" id="autreSeance">
+            <label class="form-check-label" for="autreSeance">Oui</label>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Par 15</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" th:field="*{par15}" id="par15">
+            <label class="form-check-label" for="par15">Oui</label>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Type Matière</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" th:field="*{typeMatiere}" id="typeMatiere">
+            <label class="form-check-label" for="typeMatiere">Oui</label>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-2">
+        <label for="nbreHeure" class="form-label">Nombre d'heures</label>
+        <input type="number" step="0.5" th:field="*{nbreHeure}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label for="module" class="form-label">Module</label>
+        <input type="number" step="0.5" th:field="*{module}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label for="position" class="form-label">Position</label>
+        <input type="number" th:field="*{position}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label for="taille" class="form-label">Taille</label>
+        <input type="number" th:field="*{taille}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label for="numero" class="form-label">Numéro</label>
+        <input type="number" th:field="*{numero}" class="form-control"/>
+    </div>
+
+    <div class="col-md-2">
+        <label for="offset" class="form-label">Offset</label>
+        <input type="number" th:field="*{offset}" class="form-control"/>
+    </div>
+
+   
+</div>
+
+
+
+
+
+                    <!-- Ligne 5: Jour de la semaine, Durée séance -->
+                    <div class="row mb-3">
+                       <div class="col-md-2 mt-3">
+        <label for="ordreLigne" class="form-label">Ordre Ligne</label>
+        <input type="number" th:field="*{ordreLigne}" class="form-control"/>
+    </div>
+    
+
+                        <div class="col-md-6">
+                            <label for="dureeSeance" class="form-label">Durée de la séance (heures)</label>
+                            <input type="number" step="0.5" th:field="*{dureeSeance}" class="form-control" required/>
+                        </div>
+                    </div>
+
+                    <!-- Boutons -->
+                    <div class="card-footer">
+                            <button type="submit" class="btn btn-success">Enregistrer</button>
+                        <a href="#" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Scripts spécifiques -->
+<th:block layout:fragment="bottom-scripts">
+    <th:block th:replace="~{fragments/detailsgroupeau-form-js :: scripts}"></th:block>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="scripts">
+        <script th:inline="javascript">
+            $(document).ready(function() {
+                 var enseignants = [[${enseignants}]]; 
+                console.log(enseignants);// ["Enseignant 1", "Enseignant 2", "Enseignant 3"]; // Exemple statique
+                 // var enseignants = ['ABDELKEFI Meissoun', 'ABDELMOULA MAKKI', 'Abid Cyrine', 'ABID DJEMAL RAOUDHA'];
+                // Initialisation de l'auto-complétion jQuery UI pour le champ texte
+                $("#enseignant").autocomplete({
+                    source: enseignants
+                });
+            });
+        
+        
+            $(document).ready(function() {
+              
+              var salles = [[${salles}]]; 
+              console.log(salles);// ["Enseignant 1", "Enseignant 2", "Enseignant 3"]; // Exemple statique
+               // var enseignants = ['ABDELKEFI Meissoun', 'ABDELMOULA MAKKI', 'Abid Cyrine', 'ABID DJEMAL RAOUDHA'];
+              // Initialisation de l'auto-complétion jQuery UI pour le champ texte
+              $("#salle").autocomplete({
+                  source: salles
+              });
+          });
+         
+            $(document).ready(function() {
+                // Applique Select2 à l'élément <select>
+                $('#departement').select2({
+                    placeholder: "Sélectionnez un département",
+                    allowClear: true
+                });
+            });
+         
+        </script>
+         
+        <script> 
+         
+         function loadGroupes() {
+            const departement = document.getElementById('departement').value;
+            const groupeSelect = document.getElementById('groupe');
+            const matiereSelect = document.getElementById('matiere'); // Sélection des matières
+        
+            // Effectuer une requête AJAX pour charger les groupes
+            fetch(`/groupes/${departement}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Vider le contenu actuel
+                    groupeSelect.innerHTML = '';
+        
+                    // Ajouter les nouvelles options pour les groupes
+                    data.forEach(groupe => {
+                        const option = document.createElement('option');
+                        option.value = groupe;
+                        option.textContent = groupe;
+                        groupeSelect.appendChild(option);
+                    });
+        
+                    // Vider la liste des matières lorsqu'un nouveau département est sélectionné
+                    matiereSelect.innerHTML = '<option value="">Sélectionner une Matière</option>';
+                });
+        }
+        
+        function loadMatieres() {
+            const groupe = document.getElementById('groupe').value;
+            const matiereSelect = document.getElementById('matiere');
+        
+            // Effectuer une requête AJAX pour charger les matières en fonction du groupe sélectionné
+            fetch(`/matieres/${groupe}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Vider le contenu actuel
+                    matiereSelect.innerHTML = '';
+        
+                    // Ajouter les nouvelles options pour les matières
+                    data.forEach(matiere => {
+                        const option = document.createElement('option');
+                        option.value = matiere;
+                        option.textContent = matiere;
+                        matiereSelect.appendChild(option);
+                    });
+                });
+        }
+        
+        
+        
+            // Fonction pour réinitialiser la sélection du champ
+        function clearSelection(selectId) {
+            // Réinitialiser la valeur du select à "Tout"
+            var selectElement = document.getElementById(selectId);
+            selectElement.value = "Tous";  // Réinitialise la sélection à "Tout"
+            
+            // Appeler les fonctions associées pour recharger les groupes ou matières si nécessaire
+            if (selectId === "departement") {
+                loadGroupes();  // Recharge les groupes associés
+            } 
+        }
+        
+        </script>
+        <script>
+            // Fonction pour vérifier et activer/désactiver le bouton
+            function toggleSearchButton(inputId, buttonId) {
+                var inputField = document.getElementById(inputId);
+                var button = document.getElementById(buttonId);
+        
+                // Vérifier si le champ a du texte
+                if (inputField.value.trim() !== "") {
+                    button.removeAttribute('disabled'); // Activer le bouton
+                } else {
+                    button.setAttribute('disabled', 'true'); // Désactiver le bouton
+                }
+            }
+        
+            // Écouteurs d'événements pour les champs "Enseignant" et "Salle"
+            document.getElementById('enseignant').addEventListener('input', function() {
+                toggleSearchButton('enseignant', 'searchEnseignant');
+            });
+        
+            document.getElementById('salle').addEventListener('input', function() {
+                toggleSearchButton('salle', 'searchSalle');
+            });
+        </script>
+        <script>
+            // Fonction pour ouvrir le modal de modification du statut
+            function showModal(id) {
+                if (id == null) id = -1;
+                console.log('Cellule id ');
+                console.log('  id: ' + id);
+                // Assignez l'ID du paquet au champ caché du formulaire ou à l'élément requis
+                document.getElementById("modalSeanceCoursId").value = id;
+
+                // Affichez le modal
+                const modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+                modal.show();
+            }
+
+            // Initialisation des tooltips
+            document.addEventListener('DOMContentLoaded', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            });
+        </script>
+        <script>
+            console.log("Scripts spécifiques emplois 5 sont chargés.");
+        </script>
+        
+<script>
+    document.getElementById("downloadPDF").addEventListener("click", () => {
+        const card = document.getElementById("cardToPrint");
+    
+        const options = {
+            margin: 1, // Marges en pouces
+            filename: 'emploi_du_temps.pdf', // Nom du fichier
+            image: { type: 'jpeg', quality: 0.98 }, // Qualité de l'image
+            html2canvas: { scale: 2 }, // Meilleure résolution pour le rendu
+            jsPDF: { unit: 'in', format: [11, 8.5], orientation: 'landscape' } // Taille personnalisée pour forcer le mode paysage
+        };
+    
+        // Génération du PDF
+        html2pdf()
+            .set(options)
+            .from(card)
+            .get('pdf') 
+            .then((pdf) => {
+           
+                const zoomFactor = 0.75; 
+                const originalWidth = pdf.internal.pageSize.getWidth();
+                const originalHeight = pdf.internal.pageSize.getHeight();
+                pdf.internal.pageSize.setWidth(originalWidth * zoomFactor);
+                pdf.internal.pageSize.setHeight(originalHeight * zoomFactor);
+            })
+            .save(); // Télécharge le fichier PDF
+    });
+    
+    console.log('Fragment JS intégré');
+</script>
+</div>
+</html>

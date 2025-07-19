@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${planetude.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/planetudes/save}" th:object="${planetude}" method="post">
+                         <!-- Champ caché pour l'ID -->
+                         <input type="hidden" th:field="*{id}" />
+                          <!-- Ligne 1 : Année, Nom Plan (Français), Nom Plan (Arabe) -->
+    <div class="row mb-3">
+        <!-- Champ Année -->
+        <div class="col-md-4">
+            <label for="annee" class="form-label">Année</label>
+            <input type="number" id="annee" th:field="*{annee}" class="form-control"
+                placeholder="Saisissez l'année du plan" required />
+        </div>
+        <!-- Champ Nom Plan (Français) -->
+        <div class="col-md-4">
+            <label for="nomplanfr" class="form-label">Nom Plan (Français)</label>
+            <input type="text" id="nomplanfr" th:field="*{nomplanfr}" class="form-control"
+                placeholder="Saisissez le nom en français" required />
+        </div>
+        <!-- Champ Nom Plan (Arabe) -->
+        <div class="col-md-4">
+            <label for="nomplanar" class="form-label">Nom Plan (Arabe)</label>
+            <input type="text" id="nomplanar" th:field="*{nomplanar}" class="form-control"
+                placeholder="Saisissez le nom en arabe" required />
+        </div>
+    </div>
+
+                                <!-- Ligne 2 -->
+                                <div class="row mb-3">
+                                    <!-- Champ Parcours -->
+                                    <div class="col-md-4">
+                                        <label for="parcours" class="form-label">Parcours</label>
+                                        <select id="parcours" th:field="*{parcours.id}" class="form-select" required>
+                                            <option value="" th:text="'-- Sélectionner un parcours --'"></option>
+                                            <option th:each="parcours : ${parcoursList}"
+                                                    th:value="${parcours.id}"
+                                                    th:text="${parcours.nomparcoursfr}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- Champ Date d'Habilitation -->
+                                    <div class="col-md-4">
+                                        <label for="dateHabilitation" class="form-label">Date d'Habilitation</label>
+                                        <input type="date" id="dateHabilitation" th:field="*{dateHabilitation}" class="form-control" />
+                                    </div>
+                                    <!-- Champ Description -->
+                                    <div class="col-md-4">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea id="description" th:field="*{description}" class="form-control"
+                                            placeholder="Ajoutez une description" rows="1"></textarea>
+                                    </div>
+                                </div>
+    
+                                <!-- Ligne 3 -->
+                                <div class="row mb-3">
+                                    <!-- Champ Actif et Habilité -->
+                                    <div class="col-md-4">
+                                        <label class="form-label d-block">Options</label>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" id="Actif" th:field="*{Actif}" class="form-check-input" />
+                                            <label for="Actif" class="form-check-label">Actif</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" id="habilite" th:field="*{habilite}" class="form-check-input" />
+                                            <label for="habilite" class="form-check-label">Habilité</label>
+                                        </div>
+                                    </div>
+                                    <!-- Champ Date de Début -->
+                                    <div class="col-md-4">
+                                        <label for="datedebut" class="form-label">Date de Début</label>
+                                        <input type="date" id="datedebut" th:field="*{datedebut}" class="form-control" />
+                                    </div>
+                                    <!-- Champ Date de Fin -->
+                                    <div class="col-md-4">
+                                        <label for="datefin" class="form-label">Date de Fin</label>
+                                        <input type="date" id="datefin" th:field="*{datefin}" class="form-control" />
+                                    </div>
+                                </div>
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/planetudes" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- Inclusion du fragment JavaScript    <th:block th:replace="~{fragments/departements-form-js :: scripts}"></th:block>-->
+
+
+
+</body>
+
+
+</html>

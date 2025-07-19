@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+       
+          <script>
+            $(document).ready(function () {
+                // Initialisation de Select2
+                $('#depExistants').select2({
+                    width: '100%', 
+                    placeholder: "Aucun departements disponible",
+                    allowClear: true // Permet de supprimer la sélection si nécessaire
+                });
+            });
+        </script>
+
+
+
+       
+     
+
+</th:block>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+        <script>
+            function toggleCreneauxDiv() {
+                const composeCheckbox = document.getElementById('compose');
+                const creneauxDiv = document.getElementById('creneauxDiv');
+                if (composeCheckbox.checked) {
+                    creneauxDiv.classList.remove('d-none');
+                } else {
+                    creneauxDiv.classList.add('d-none');
+                }
+            }
+        
+            // Initialisation de Select2
+            document.addEventListener('DOMContentLoaded', function () {
+                $('.select2').select2({
+                    width: '100%',
+                    placeholder: "Aucun créneau disponible",
+                    allowClear: true // Permet de supprimer la sélection si nécessaire
+                });
+            });
+        </script>
+
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const composeCheckbox = document.getElementById("compose");
+            const creneauxDiv = document.getElementById("creneauxDiv");
+            const composedCreneauxSelect = document.getElementById("composedCreneaux");
+    
+            const toggleCreneauxDiv = () => {
+                if (composeCheckbox.checked) {
+                    creneauxDiv.style.display = ""; // Affiche la div
+                } else {
+                    creneauxDiv.style.display = "none"; // Masque la div
+                    // Réinitialise la sélection si décoché
+                    composedCreneauxSelect.value = null;
+                }
+            };
+    
+            // Initialiser l'état au chargement de la page
+            toggleCreneauxDiv();
+    
+            // Ajouter un écouteur sur le changement de la case à cocher
+            composeCheckbox.addEventListener("change", toggleCreneauxDiv);
+        });
+    </script>
+    <script>
+        function toggleCreneauxDiv() {
+            const composeCheckbox = document.getElementById('compose');
+            const creneauxDiv = document.getElementById('creneauxDiv');
+            if (composeCheckbox.checked) {
+                creneauxDiv.classList.remove('d-none');
+            } else {
+                creneauxDiv.classList.add('d-none');
+            }
+        }
+    </script>
+    
+  <script>
+    
+ 
+
+     
+    document.addEventListener("DOMContentLoaded", () => {
+        const heureDebutInput = document.getElementById("heureDebut");
+        const heureFinInput = document.getElementById("heureFin");
+        const dureeSeanceInput = document.getElementById("dureeSeance");
+        const tailleInput = document.getElementById("taille");
+
+        const calculateDurationAndSize = () => {
+            const debut = heureDebutInput.value;
+            const fin = heureFinInput.value;
+
+            if (debut && fin) {
+                const debutTime = new Date(`1970-01-01T${debut}:00`);
+                const finTime = new Date(`1970-01-01T${fin}:00`);
+                const diffMs = finTime - debutTime; // Différence en millisecondes
+                const diffHours = diffMs / (1000 * 60 * 60); // Convertir en heures
+
+                // Calcul de la taille basée sur les tranches de 1,5 heure = 2 unités
+                const taille = Math.ceil(diffHours / 1.5) * 2;
+
+                // Affecter les valeurs calculées
+                dureeSeanceInput.value = diffHours.toFixed(2); // Limiter à 2 décimales
+                tailleInput.value = taille; // Calcul de la taille
+            } else {
+                // Réinitialiser si les heures sont vides
+                dureeSeanceInput.value = "";
+                tailleInput.value = "";
+            }
+        };
+
+        // Écouter les changements sur les deux champs d'heure
+        heureDebutInput.addEventListener("change", calculateDurationAndSize);
+        heureFinInput.addEventListener("change", calculateDurationAndSize);
+    });
+</script>
+
+</th:block>
+</html>

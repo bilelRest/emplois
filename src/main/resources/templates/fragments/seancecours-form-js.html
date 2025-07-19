@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+        <script>
+  $(document).ready(function() {
+                 var matieres = [[${matieres}]]; 
+                console.log(matieres);// ["Enseignant 1", "Enseignant 2", "Enseignant 3"]; // Exemple statique
+                 // var enseignants = ['ABDELKEFI Meissoun', 'ABDELMOULA MAKKI', 'Abid Cyrine', 'ABID DJEMAL RAOUDHA'];
+                // Initialisation de l'auto-complétion jQuery UI pour le champ texte
+                $("#matiere").autocomplete({
+                    source: matieres
+                });
+            });
+
+ 
+        </script>
+
+
+       
+
+</th:block>
+</html>

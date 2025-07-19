@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="scripts">
+
+<!-- Gestion du spinner au chargement de la page -->
+<script th:inline="javascript"> 
+    console.log("Script Details groupe AU chargé !");
+    window.addEventListener('DOMContentLoaded', () => {
+        const spinner = document.getElementById('spinner');
+        if (spinner) spinner.classList.remove('d-none');
+    });
+
+    window.addEventListener('load', () => {
+        const spinner = document.getElementById('spinner');
+        if (spinner) spinner.classList.add('d-none');
+    });
+
+    $(document).ready(function () {
+        const selectConfigs = [
+            { selector: '#enseignant', placeholder: "Choisir un enseignant" },
+            { selector: '#salle', placeholder: "Choisir une salle" },
+            { selector: '#groupeau', placeholder: "Choisir un groupe" },
+            { selector: '#ecue', placeholder: "Choisir une matière" },
+            { selector: '#creneau', placeholder: "Choisir un créneau" }
+        ];
+
+        selectConfigs.forEach(({ selector, placeholder }) => {
+            if ($(selector).length) {
+                $(selector).select2({
+                    placeholder,
+                    allowClear: true,
+                    width: '100%'
+                });
+            }
+        });
+    });
+</script>
+
+<!-- Gestion dynamique des listes (GroupesAU et ECUE) -->
+<script th:inline="javascript">
+    $(document).ready(function () {
+        const anneeInput = $("input[name='annee']");
+        const semestreSelect = $("select[name='semestre']");
+        const departementSelect = $("select[name='departement']");
+       const groupeAUSelect = $("select[name='groupeAU.id']");
+        const ecueSelect = $("select[name='ecue.id']");
+        const spinner = $("#spinner");
+
+        const showSpinner = () => spinner.removeClass("d-none");
+        const hideSpinner = () => spinner.addClass("d-none");
+
+        function chargerGroupesAU() {
+            const annee = anneeInput.val();
+            const semestreId = semestreSelect.val();
+            const departementId = departementSelect.val();
+
+            console.log("Chargement des groupes AU pour:", { annee, semestreId, departementId });
+
+            if (annee && semestreId && departementId) {
+                showSpinner();
+                fetch(`/api/groupes-au?annee=${encodeURIComponent(annee)}&semestre=${encodeURIComponent(semestreId)}&departementId=${encodeURIComponent(departementId)}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("Groupes AU récupérés:", data);
+                        groupeAUSelect.empty(); // Vide la liste
+                        groupeAUSelect.append('<option value="" disabled selected>-- Sélectionner un groupe --</option>');
+                        ecueSelect.empty();
+                        ecueSelect.append('<option value="" disabled selected>-- Choisir une ECUE --</option>');
+
+                        data.forEach(({ id, nomgroupe }) => {
+                            groupeAUSelect.append($('<option>').val(id).text(nomgroupe));
+                        });
+
+                        // Actualiser Select2
+                        groupeAUSelect.val(null).trigger('change');
+                    })
+                    .catch(err => console.error("Erreur lors de la récupération des groupes AU:", err))
+                    .finally(hideSpinner);
+            }
+        }
+
+        function chargerECUES(groupeId) {
+            if (!groupeId) return;
+
+            console.log("Chargement des ECUE pour le groupe:", groupeId);
+            showSpinner();
+            fetch(`/api/detailsgroupeau/ecues/${encodeURIComponent(groupeId)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                    return res.json();
+                })
+                .then(data => {
+                    console.log("ECUEs récupérées:", data);
+                    ecueSelect.empty();
+                    ecueSelect.append('<option value="" disabled selected>-- Choisir une ECUE --</option>');
+                    data.forEach(({ id, nomec }) => {
+                        ecueSelect.append($('<option>').val(id).text(nomec));
+                    });
+                    // Actualiser Select2
+                    ecueSelect.val(null).trigger('change');
+                })
+                .catch(err => console.error("Erreur chargement ECUE :", err))
+                .finally(hideSpinner);
+        }
+
+        // Déclenchement initial si besoin (optionnel)
+        // chargerGroupesAU();
+
+        // Événements sur les champs
+        semestreSelect.on('change', chargerGroupesAU);
+        departementSelect.on('change', chargerGroupesAU);
+        groupeAUSelect.on('change', () => chargerECUES(groupeAUSelect.val()));
+    });
+</script>
+
+</th:block>
+</html>

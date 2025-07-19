@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Emploi du Temps</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container mt-5">
+    <h3 class="mb-4">Emploi du Temps</h3>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div th:each="cellule : ${cellules}"
+                th:classappend="${cellule.styleBootStrap} + ' mt-2'">
+               <div class="card p-2">
+                   <h5 class="card-title" th:text="${cellule.nomEnseignant}"></h5>
+                   <p class="card-text">
+                       <strong>Matière :</strong> <span th:text="${cellule.nomMatiere}"></span><br>
+                       <strong>Salle :</strong> <span th:text="${cellule.nomSalle}"></span><br>
+                       <strong>Créneau :</strong> <span th:text="${cellule.creneauHoraire}"></span><br>
+                   </p>
+                   <p class="card-text">
+                       <span th:if="${cellule.autreSeance}" class="badge bg-info">Autre Séance</span>
+                       <span th:if="${cellule.par15}" class="badge bg-warning">Par 15</span>
+                       <span th:if="${cellule.typeMatiere}" class="badge bg-primary">Type Matière</span>
+                   </p>
+               </div>
+           </div>
+           
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

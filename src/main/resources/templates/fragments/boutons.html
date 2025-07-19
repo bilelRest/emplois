@@ -1,0 +1,76 @@
+<!-- boutons.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragments de Boutons</title>
+ 
+</head>
+<body>
+
+    <!-- Fragment des boutons horizontaux avec Home et Historique -->
+<div th:fragment="boutonsHorizontaux">
+    <nav class="navbar navbar-light bg-light py-2">
+        <div class="container-fluid">
+            <!-- Utilisation de "nav" et "d-flex" pour aligner horizontalement -->
+            <ul class="nav d-flex">
+                <!-- Bouton Home -->
+                <li class="nav-item">
+                    <a class="nav-link border-end" th:href="@{/emplois5}" title="Accueil">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+   <!-- Bouton Planifier -->
+   <li class="nav-item">
+    <a class="nav-link border-end" href="#" title="Planifier">
+        <i class="bi bi-calendar-check"></i> Planifier 
+    </a>
+</li>
+
+                <!-- Bouton Ajouter -->
+                <li class="nav-item">
+                    <a class="nav-link border-end d-flex align-items-center" th:href="@{/saisieseance}" title="Ajouter">
+                        <i class="bi bi-plus-circle"></i> Ajouter une séance de cours
+                    </a>
+                </li>
+
+                <!-- Bouton Recherche -->
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="#" title="Rechercher">
+                        <i class="bi bi-search"></i> Rechercher
+                    </a>
+                </li>
+
+                <!-- Bouton Imprimer -->
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="#" title="Imprimer">
+                        <i class="bi bi-printer"></i> Imprimer
+                    </a>
+                </li>
+
+                <!-- Bouton Exporter -->
+                <li class="nav-item">
+                    <a class="nav-link border-end" href="#" title="Exporter">
+                        <i class="bi bi-file-earmark-arrow-down"></i> Exporter
+                    </a>
+                </li>
+  <!-- Bouton Statistique -->
+  <li class="nav-item">
+    <a class="nav-link border-end" href="#" title="Statistique">
+        <i class="bi bi-bar-chart"></i> Statistique
+    </a>
+</li>
+                <!-- Bouton Historique -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Historique">
+                        <i class="bi bi-clock-history"></i> Historique
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+</body>
+</html>

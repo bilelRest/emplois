@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+        <section>
+            <div layout:fragment="content">
+
+                <div class="container mt-5">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0" th:text="${ue.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                        </div>
+
+                        <div class="card-body">
+                            <form th:action="@{/ues/save}" th:object="${ue}" method="post">
+                                <!-- Champ caché pour l'ID -->
+                                <input type="hidden" th:field="*{id}" />
+
+                                <div class="row mb-3">
+
+                                    <div class="col-md-2">
+                                        <label for="typeUE" class="form-label">Type de Parcours</label>
+                                        <select id="typeUE" th:field="*{typeUE}" class="form-select" required>
+                                            <option value="" disabled selected>Choisissez un type</option>
+                                            <option th:each="type : ${types}" th:value="${type.name()}"
+                                                th:text="${type.name()}"></option>
+                                        </select>
+
+                                    </div>
+                                     <!-- Nom UE -->
+        <div class="col-md-6">
+            <label for="nomUE" class="form-label">Nom de l'UE</label>
+            <input type="text" id="nomUE" th:field="*{nomUE}" class="form-control" 
+                   placeholder="Saisissez le nom de l'UE" required maxlength="300" />
+
+        </div>
+         <!-- Crédit UE -->
+         <div class="col-md-2">
+            <label for="creditUE" class="form-label">Crédit UE</label>
+            <input type="number" id="creditUE" th:field="*{creditUE}" class="form-control" 
+                   placeholder="Crédit" step="0.1" min="0" required />
+        </div>
+
+        <!-- Coefficient UE -->
+        <div class="col-md-2">
+            <label for="coefUE" class="form-label">Coefficient UE</label>
+            <input type="number" id="coefUE" th:field="*{coefUE}" class="form-control" 
+                   placeholder="Coefficient" step="0.1" min="0" required />
+        </div>
+    </div>
+ <!-- Parcours -->
+   
+   <div class="row mb-3 align-items-start">
+    <!-- Cellule Département + Actif + Visible -->
+    <div class="col-md-2">
+        <div class="d-flex flex-column">
+            <!-- Ligne Département -->
+
+             <!-- Champ Choix Département -->
+                          <div>
+                            <label for="parcoursExistants">Sélection des parcours </label>
+                            <select id="parcoursExistants" th:field="*{parcoursList}" class="form-select select2" multiple="multiple">
+                                <option th:each="parc : ${parcoursExistants}" th:value="${parc.id}"
+                                    th:text="${parc.departement.nomdepfr + ' - ' + parc.nomparcoursfr}"
+                                    th:selected="${parcoursList != null && parcoursList.contains(parc)}">
+                                </option>
+                            </select>     </div>
+
+           
+
+            <!-- Ligne Actif + Visible -->
+            <div class="mt-2">
+                <label class="form-label d-block">Options</label>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" id="Actif" th:field="*{actif}" class="form-check-input" />
+                    <label for="Actif" class="form-check-label">Actif</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" id="visible" th:field="*{visible}" class="form-check-input" />
+                    <label for="visible" class="form-check-label">Visible</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cellule Description -->
+    <div class="col-md-10">
+        <label for="descriptionUE" class="form-label">Description de l'UE</label>
+        <textarea id="descriptionUE" th:field="*{descriptionUE}" class="form-control"
+                  placeholder="Ajoutez une description pour l'UE" rows="3"></textarea>
+    </div>
+</div>
+
+
+     
+
+    <!-- Boutons -->
+    <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+        <a href="/ues" class="btn btn-secondary">Annuler</a>
+    </div>
+</form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <th:block layout:fragment="bottom-scripts">
+
+        <!-- Importation du fragment child-js    -->
+        <th:block th:replace="~{fragments/ue-form-js :: scripts}"></th:block>
+    </th:block>
+
+
+</body>
+
+
+</html>

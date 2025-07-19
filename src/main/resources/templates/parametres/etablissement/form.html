@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+             <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${etablissement.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/etablissements/save}" th:object="${etablissement}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Champ Libellé Français -->
+                        <div class="mb-3">
+                            <label for="nommatfr" class="form-label">Nom du département (Fr)</label>
+                            <input type="text" id="nommatfr" th:field="*{nometabfr}" class="form-control" placeholder="Saisissez le nom de l'établissement en français" required />
+                        </div>
+
+                        <!-- Champ Libellé Arabe -->
+                        <div class="mb-3">
+                            <label for="nommatfrabr" class="form-label">Nom de l'établissement (Ar) </label>
+                            <input type="text" id="nommatfrabr" th:field="*{nometabar}" class="form-control" placeholder="Saisissez le nom de de l'établissement en arabe" required />
+                        </div>
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/etablissements" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- Inclusion du fragment JavaScript    <th:block th:replace="~{fragments/departements-form-js :: scripts}"></th:block>-->
+
+
+
+</body>
+
+
+</html>

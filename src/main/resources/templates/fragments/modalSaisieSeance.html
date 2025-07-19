@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="modalSaisieSeance">
+<!-- Modal pour le formulaire de séance -->
+<div class="modal fade" id="seanceModal" tabindex="-1" aria-labelledby="seanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form th:action="@{/emplois5}" th:method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="seanceModalLabel">Séance de Cours</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Année -->
+                    <div class="mb-3">
+                        <label for="annee" class="form-label">Année</label>
+                        <input type="number" id="annee" name="annee" class="form-control" th:value="${seance.annee}" required>
+                    </div>
+
+                    <!-- Semestre -->
+                    <div class="mb-3">
+                        <label for="semestre" class="form-label">Semestre</label>
+                        <select id="semestre" name="semestre" class="form-select" th:value="${seance.semestre}" required>
+                            <option value="1">Semestre 1</option>
+                            <option value="2">Semestre 2</option>
+                        </select>
+                    </div>
+
+                    <!-- Département -->
+                    <div class="mb-3">
+                        <label for="departement" class="form-label">Département</label>
+                        <select id="departement" name="departement" class="form-select" th:field="*{departement}" 
+                                th:options="${departements}" th:value="${seance.departement}" required>
+                        </select>
+                    </div>
+
+                    <!-- Groupe -->
+                    <div class="mb-3">
+                        <label for="groupe" class="form-label">Groupe</label>
+                        <select id="groupe" name="groupe" class="form-select" th:value="${seance.groupe}" required>
+                            <option th:each="groupe : ${groupes}" th:value="${groupe.id}" th:text="${groupe.nom}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Enseignant -->
+                    <div class="mb-3">
+                        <label for="enseignant" class="form-label">Enseignant</label>
+                        <select id="enseignant" name="enseignant" class="form-select" th:field="*{enseignant}" required>
+                            <option th:each="enseignant : ${enseignants}" th:value="${enseignant.id}" th:text="${enseignant.nom}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Matière -->
+                    <div class="mb-3">
+                        <label for="matiere" class="form-label">Matière</label>
+                        <select id="matiere" name="matiere" class="form-select" th:field="*{matiere}" required>
+                            <option th:each="matiere : ${matieres}" th:value="${matiere.id}" th:text="${matiere.nom}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Créneau Horaire -->
+                    <div class="mb-3">
+                        <label for="creneauHoraire" class="form-label">Créneau Horaire</label>
+                        <select id="creneauHoraire" name="creneauHoraire" class="form-select" required>
+                            <option th:each="creneau : ${creneaux}" th:value="${creneau.id}" th:text="${creneau.nom}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Salle -->
+                    <div class="mb-3">
+                  
+                        <label for="salle" class="form-label"> Salle </label>
+                        <input type="text" class="form-control" id="salle" name="salle"
+                            th:value="${currentSalle}" placeholder="Nom salle">
+                    </div>
+
+                    <!-- Jour de la semaine -->
+                    <div class="mb-3">
+                        <label for="jourSemaine" class="form-label">Jour de la Semaine</label>
+                        <select id="jourSemaine" name="jourSemaine" class="form-select" required>
+                            <option th:each="jour : ${joursSemaine}" th:value="${jour}" th:text="${jour}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Cases à cocher -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" id="par15" name="par15" class="form-check-input" th:checked="${seance.par15}">
+                        <label for="par15" class="form-check-label">Par 15 jours</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" id="moduleCheckbox" name="moduleCheckbox" class="form-check-input" th:checked="${seance.module != null}">
+                        <label for="moduleCheckbox" class="form-check-label">Module</label>
+                    </div>
+
+                    <!-- Module -->
+                    <div id="moduleSection" th:if="${seance.module != null}">
+                        <label for="module" class="form-label">Module</label>
+                        <select id="module" name="module" class="form-select">
+                            <option th:each="module : ${modules}" th:value="${module.id}" th:text="${module.nom}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</th:block>
+</html>

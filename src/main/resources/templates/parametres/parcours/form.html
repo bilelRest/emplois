@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+           <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${parcours.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/parcours/save}" th:object="${parcours}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Ligne avec nomparcoursfr et nomparcoursar -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nomparcoursfr" class="form-label">Nom du Parcours (Français)</label>
+                                <input type="text" id="nomparcoursfr" th:field="*{nomparcoursfr}" class="form-control"
+                                    placeholder="Saisissez le nom en français" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nomparcoursar" class="form-label">Nom du Parcours (Arabe)</label>
+                                <input type="text" id="nomparcoursar" th:field="*{nomparcoursar}" class="form-control"
+                                    placeholder="سجل اسم المسار بالعربية" required />
+                            </div>
+                        </div>
+
+                       <!-- Ligne avec Département, Type de Parcours et Description -->
+<div class="row mb-3">
+    <!-- Colonne gauche : Département + Type Parcours -->
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="departement" class="form-label">Département</label>
+            <select id="departement" th:field="*{departement.id}" class="form-select" required>
+                <option value="" th:text="'-- Sélectionner un département --'"></option>
+                <option th:each="departement : ${departementList}" th:value="${departement.id}" th:text="${departement.nomdepfr}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="typeParcours" class="form-label">Type de Parcours</label>
+            <select id="typeParcours" th:field="*{typeParcours}" class="form-select" required>
+                <option value="" disabled selected>Choisissez un type</option>
+                <option th:each="type : ${types}" 
+                        th:value="${type.name()}" 
+                        th:text="${type.name()}"></option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Colonne droite : Description -->
+    <div class="col-md-6">
+        <label for="descriptionparcours" class="form-label">Description</label>
+        <textarea id="descriptionparcours" th:field="*{descriptionparcours}" class="form-control"
+            rows="5" placeholder="Entrez une description"></textarea>
+    </div>
+</div>
+
+
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a th:href="@{/parcours}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- Inclusion du fragment JavaScript    <th:block th:replace="~{fragments/departements-form-js :: scripts}"></th:block>-->
+
+
+
+</body>
+
+
+</html>

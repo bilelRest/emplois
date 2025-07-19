@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // Sélectionner tous les boutons de suppression
+    const deleteButtons = document.querySelectorAll('[data-bs-target="#confirmDeleteModal"]');
+    const deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteIdInput = document.getElementById('deleteId');
+    const deleteIdDisplay = document.getElementById('deleteIdDisplay');
+    const deleteNomFrDisplay = document.getElementById('deleteNomFrDisplay');
+    const deleteNomArDisplay = document.getElementById('deleteNomArDisplay');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Récupérer les données depuis les attributs du bouton
+            const id = button.getAttribute('data-id');
+            const nomFr = button.getAttribute('data-nomfr');
+            const nomAr = button.getAttribute('data-nomar');
+
+            console.log('ID à supprimer :', id); // Debug : Vérifiez que l'ID est correct
+            console.log('Nom (FR) :', nomFr);   // Debug : Vérifiez le nom français
+            console.log('Nom (AR) :', nomAr);   // Debug : Vérifiez le nom arabe
+
+            // Mettre à jour les champs cachés et les affichages dans la fenêtre modale
+            deleteIdInput.value = id;
+            deleteIdDisplay.textContent = id;
+            deleteNomFrDisplay.textContent = nomFr;
+            deleteNomArDisplay.textContent = nomAr;
+
+            // Mettre à jour l'attribut action du formulaire
+            deleteForm.setAttribute('action', `/etablissements/delete/${id}`);
+        });
+    });
+});
+
+
+    
+        function updatePageSize() {
+            const size = document.getElementById("pageSize").value;
+            window.location.href = `/etablissements?page=0&size=${size}`;
+        }
+    </script>
+        
+
+</th:block>
+</html>

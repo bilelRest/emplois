@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+        <section>
+            <div layout:fragment="content">
+                   <div class="container mt-5">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4 class="mb-0" th:text="${groupe.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                        </div>
+
+                        <div class="card-body">
+                            <form th:action="@{/groupes/save}" th:object="${groupe}" method="post">
+                                <!-- Champ caché pour l'ID -->
+                                <input type="hidden" th:field="*{id}" />
+
+                                <!-- Ligne 1 : Nom du groupe et Description -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nomgroupe" class="form-label">Nom du groupe</label>
+                                        <input type="text" id="nomgroupe" th:field="*{nomgroupe}" class="form-control"
+                                            placeholder="Saisissez le nom du groupe" required />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="description" class="form-label">Description</label>
+                                        <input type="text" id="description" th:field="*{description}"
+                                            class="form-control" placeholder="Saisissez la description" />
+                                    </div>
+                                </div>
+
+                                <!-- Ligne 2 : Parcours et Niveau -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="parcours" class="form-label">Parcours</label>
+                                        <select id="parcours" th:field="*{parcours.id}" class="form-select" required>
+                                            <option value="" th:text="'-- Sélectionner un parcours --'"></option>
+                                            <option th:each="parc : ${parcoursList}" th:value="${parc.id}" th:text="${parc.nomparcoursfr}"></option>
+                                        </select>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="niveau" class="form-label">Niveau</label>
+                                        <input type="number" id="niveau" th:field="*{niveau}" class="form-control"
+                                            placeholder="Saisissez le niveau (1 à 5)" min="1" max="5" required />
+                                    </div>
+                                </div>
+
+                                <!-- Ligne 3 : Active et Vérification Semestres -->
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="active" class="form-label">Actif</label>
+                                        <input type="checkbox" id="active" th:field="*{active}"
+                                            class="form-check-input" />
+                                        <span class="ms-2">Activer le groupe</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="verSemestre1" class="form-label">Verrouillage Semestre 1</label>
+                                        <input type="checkbox" id="verSemestre1" th:field="*{verSemestre1}"
+                                            class="form-check-input" />
+                                        <span class="ms-2">Verrouillé</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="verSemestre2" class="form-label">Verrouillage Semestre 2</label>
+                                        <input type="checkbox" id="verSemestre2" th:field="*{verSemestre2}"
+                                            class="form-check-input" />
+                                        <span class="ms-2">Verrouillé</span>
+                                    </div>
+                                </div>
+
+                                <!-- Boutons -->
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                                    <a href="/groupes" class="btn btn-secondary">Annuler</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

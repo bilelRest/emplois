@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Layout</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+
+    
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.0/font/bootstrap-icons.css}">
+</head>
+
+
+<!-- jQuery et Bootstrap JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+<!-- Liens vers les fichiers CSS et JS pour jQuery UI avec WebJars -->
+<link th:href="@{/webjars/jquery-ui/1.14.0/jquery-ui.min.css}" rel="stylesheet" />
+<script th:src="@{/webjars/jquery-ui/1.14.0/jquery-ui.min.js}"></script>
+
+<link th:href="@{/css/select2.min.css}" rel="stylesheet" />
+<script th:src="@{/js/select2.min.js}"></script>
+
+<script th:src="@{/fragments/script-flash.js}"></script>
+
+
+<body>
+    <!-- Barre de navigation supérieure -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/isetSfax.png}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                Gestion Emplois du Temps
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bell position-relative">
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    3
+                                    <span class="visually-hidden">notifications non lues</span>
+                                </span>
+                            </i>
+                            Notifications
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><a class="dropdown-item" href="#">Notification 1</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 2</a></li>
+                            <li><a class="dropdown-item" href="#">Notification 3</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/30" class="rounded-circle" alt="Profil" width="30"
+                                height="30">  
+                                 <!-- Nom de l'utilisateur -->
+    <span sec:authentication="name"></span>
+ 
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#">Consulter le profil</a></li>
+                             
+                            <li><a class="dropdown-item" href="#">Changer le mot de passe</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" style="display: inline;">
+                                    <button type="submit" class="dropdown-item" style="border: none; background: none; padding: 0; color: inherit;">
+                                        Se déconnecter
+                                    </button>
+                                </form>
+                            </li>
+                              </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid content">
+        <div class="row">
+        <!-- Menu accordéon (Barre latérale) -->
+<nav class="col-md-3 col-lg-2 bg-light py-3">
+    <div class="accordion" id="accordionSidebar">
+
+        <!-- Section Paramètres, visible uniquement pour les utilisateurs ayant le rôle ADMIN -->
+        <div class="accordion-item" sec:authorize="hasRole('ROLE_ADMIN')">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <i class="bi bi-gear me-2"></i> Paramètres
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#accordionSidebar">
+                <div class="accordion-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/etablissements}"><i class="bi bi-building me-2"></i> Etablissements</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/departements}"><i class="bi bi-diagram-2 me-2"></i> Départements</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/grades}"><i class="bi bi-award me-2"></i> Grades</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/enseignants}"><i class="bi bi-person-workspace me-2"></i> Enseignants</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/parcours}"><i class="bi bi-signpost-2 me-2"></i> Parcours</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/groupes}"><i class="bi bi-people me-2"></i> Groupes</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/salles}"><i class="bi bi-door-closed me-2"></i> Salles</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/creneaux}"><i class="bi bi-clock me-2"></i> Crénaux Horaires</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/matieres}"><i class="bi bi-book me-2"></i> Matières</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Traitement (visible pour tous les utilisateurs) -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="bi bi-folder2-open me-2"></i> Traitement
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                data-bs-parent="#accordionSidebar">
+                <div class="accordion-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/planetudes}"><i class="bi bi-pencil-square me-2"></i> Plan d'étude</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/emplois5}"><i class="bi bi-calendar-event me-2"></i> Emplois du temps</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Administration, visible uniquement pour les utilisateurs ayant le rôle ADMIN -->
+        <div class="accordion-item" sec:authorize="hasRole('ROLE_ADMIN')">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <i class="bi bi-shield-lock me-2"></i> Administration
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                data-bs-parent="#accordionSidebar">
+                <div class="accordion-body">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" th:href="@{/menus}"><i class="bi bi-list me-2"></i> Menus</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/submenus}"><i class="bi bi-list-nested me-2"></i> Sous menus</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/roles}"><i class="bi bi-people-fill me-2"></i> Rôles</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/users}"><i class="bi bi-person-fill me-2"></i> Utilisateurs</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+
+            <!-- Contenu principal -->
+            <main class="col-md-9 col-lg-10 py-3">
+                <!-- Inclure les fragments -->
+                <div th:replace="~{fragments/boutons :: boutonsHorizontaux}"></div>
+              
+
+                <!-- Test ou contenu par défaut -->
+                <div>
+                    <h3 th:text="${currentPageName ?: 'default page'}"></h1>
+                </div>
+                 
+                <hr class="my-2" style="border-top: 2px solid #007bff;">
+   
+                <div th:replace="~{fragments/message :: message-flash}"></div>
+                <!-- Section où le contenu spécifique de la page enfant sera injecté -->
+                <div layout:fragment="content">
+                  
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer>
+        <div class="container">
+            <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2024</span> N.M Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Zone pour injecter les scripts -->
+    <th:block layout:fragment="bottom-scripts">
+      
+        
+        
+         <script>
+            let name = "Code JS Template";
+            console.log("Hellow:", name);
+
+        </script>
+    </th:block>
+
+</body>
+
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="scripts">
+       
+          <script  th:inline="javascript">
+
+             console.log("Script ECUE chargé !");
+/*
+$(document).ready(function () {
+    $('#ue').select2({
+      placeholder: "Choisir une unité d'enseignement",
+      allowClear: true,
+      width: '100%' // pour que le select prenne toute la largeur du parent
+    });
+  });
+
+$(document).ready(function () {
+    $('#matiere').select2({
+      placeholder: "Choisir une matière",
+      allowClear: true,
+      width: '100%' // pour que le select prenne toute la largeur du parent
+    });
+  });
+
+            $(document).ready(function () {
+                // Initialisation de Select2
+                $('#planEtude').select2({
+                    width: '100%', 
+                    placeholder: "Aucun plan étude disponible",
+                    allowClear: true // Permet de supprimer la sélection si nécessaire
+                });
+            });
+     
+      
+*/
+ // Initialisation des selects avec Select2
+  $('#planEtude, #parcours, #ue, #matiere').select2({
+    width: '100%',
+    placeholder: function() {
+      if (this.id === 'planEtude') return "Aucun plan étude disponible";
+      if (this.id === 'parcours') return "Choisir un parcours";
+      if (this.id === 'ue') return "Choisir une unité d'enseignement";
+      if (this.id === 'matiere') return "Choisir une matière";
+      return "Sélectionnez une option";
+    },
+    allowClear: true
+  });
+
+  $(document).ready(function () {
+    const planEtudeSelect = $("select[name='planEtude']");
+    const parcoursSelect = $("select[name='parcours']");
+    const ueSelect = $("select[name='ue']");
+    const matiereSelect = $("select[name='matiere']");
+
+    // Fonction pour vider un select et remettre l'option par défaut
+    const clearSelect = (select) => {
+        select.empty();
+        select.append('<option value="">-- Sélectionnez --</option>');
+    };
+
+    // Au changement du plan d'étude
+    planEtudeSelect.on("change", function () {
+        const planEtudeId = $(this).val();
+        console.log("planEtudeId:", planEtudeId);
+
+        clearSelect(parcoursSelect);
+        clearSelect(ueSelect);
+        clearSelect(matiereSelect);
+
+        if (planEtudeId) {
+            fetch(`/api/parcours/${planEtudeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(parcours => {
+                        parcoursSelect.append(
+                            `<option value="${parcours.id}">${parcours.nomparcoursfr}</option>`
+                        );
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des parcours:", error));
+        }
+    });
+
+    // Au changement du parcours
+    parcoursSelect.on("change", function () {
+        const parcoursId = $(this).val();
+        console.log("parcoursId:", parcoursId);
+
+        clearSelect(ueSelect);
+        clearSelect(matiereSelect);
+
+        if (parcoursId) {
+            fetch(`/api/ues/${parcoursId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(ue => {
+                        ueSelect.append(
+                            `<option value="${ue.id}">${ue.nomUE}</option>`
+                        );
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des UEs:", error));
+        }
+    });
+
+    // Au changement de l'UE
+    ueSelect.on("change", function () {
+        const ueId = $(this).val();
+        console.log("ueId:", ueId);
+
+        clearSelect(matiereSelect);
+
+        if (ueId) {
+            fetch(`/api/matieres/${ueId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(matiere => {
+                        matiereSelect.append(
+                            `<option value="${matiere.id}">${matiere.nommatfr}</option>`
+                        );
+                    });
+                })
+                .catch(error => console.error("Erreur lors du chargement des matières:", error));
+        }
+    });
+});
+
+    </script>
+    
+    
+
+       
+     
+
+</th:block>
+</html>

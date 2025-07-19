@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Emploi du Temps</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.0/font/bootstrap-icons.css}">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h3 class="mb-4">Emploi du Temps SEM 31</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="table-secondary">Jour</th>
+                    <th class="table-secondary">
+                        <div class="row border">
+                            <!-- Ligne 1 avec labels de tailles et positions variées -->
+                            <div class="col-2">
+                                <span class="badge border border-primary text-primary col-12">Séance 1 <br>
+                                    08:15-09:45</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="badge border border-success text-success col-12">Séance 2<br>
+                                    10:00-11:30</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="badge border border-warning text-warning col-12">Séance 3<br>
+                                    11:45-13:15</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="badge border border-danger text-danger col-12">Séance 4<br>
+                                    13:20-14:50</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="badge border border-info text-info col-12">Séance 5 <br>14:55-16:25</span>
+                            </div>
+                            <div class="col-2">
+                                <span class="badge border border-info text-info col-12">Séance 6 <br> 16:30-18:00
+                                </span>
+                            </div>
+                        </div>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr th:each="entry : ${emploiDuTemps}">
+                    <!-- Colonne Jour (Première colonne) ;:"table-secondary" -->
+
+                    <td class="col-1" th:text="${entry.key}"></td>
+                    <!-- Colonne Cellules (Seconde colonne) -->
+
+                    <td>
+                        <div class="container">
+                            <div class="row">
+                                <div th:each="cellule : ${entry.value}" class="col-12 mt-2">
+                                    <!-- Nouvelle ligne pour chaque cellule -->
+                                    <div th:classappend="${cellule.styleBootStrap} + (${cellule.numeroLigneTableau == 0} ? '' : ' offset-' + ${cellule.numeroLigneTableau})">
+                                        
+                                    <div class="card">
+                                        
+
+                                        <p class="card-header bg-light text-dark">
+                                            <span class="badge border border-success text-success mt-2 text-wrap"
+                                                th:text="${cellule.nomMatiere}"></span>
+
+                                            <br>
+                                            <br>
+                                        </p>
+                                        <p class="card-body">
+                                 
+                                            <span class="badge bg-primary text-red mt-2 text-wrap"
+                                                th:text="${cellule.nomEnseignant}"></span><br>
+                                           
+                                        </p>
+                                        <p class="card-footer bg-light text-dark">
+                                            <span th:if="${cellule.nomSalle}" class="badge bg-info text-dark mt-2 text-wrap"
+                                                th:text="${cellule.nomSalle}"></span>
+                                            <span th:if="${cellule.par15}" class="badge bg-warning text-dark mt-2 text-wrap">Par
+                                                15</span>
+                                                <span class="badge bg-light text-dark  mt-2 text-wrap"
+                                                th:text="${cellule.creneauHoraire}"></span>
+                                        <!--     <span th:if="${cellule.typeMatiere}"
+                                                class="badge bg-primary text-dark">COURS</span> 
+                                            <span th:unless="${cellule.typeMatiere}"
+                                                class="badge bg-primary text-white">TP</span>
+                                            <!-- Icônes Edit et Delete avec tooltips -->
+                                            <a th:href="@{/edit/{id}(id=${cellule.id})}" class="ms-2 text-primary"
+                                                title="Modifier" data-bs-toggle="tooltip">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a th:href="@{/delete/{id}(id=${cellule.id})}" class="ms-2 text-danger"
+                                                title="Supprimer" data-bs-toggle="tooltip"
+                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <!-- Si showLineBreak est vrai, ajoute un saut de ligne : <br th:if="${cellule.autreSeance}" /> -->
+                            
+                                
+                                </div>
+                            </div>
+                        </div>
+    </div>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+
+
+    </div>
+    <!-- jQuery et Bootstrap JavaScript -->
+    <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

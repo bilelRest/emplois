@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${grade.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/grades/save}" th:object="${grade}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <!-- Champ Libellé Français -->
+                        <div class="mb-3">
+                            <label for="nomgradefr" class="form-label">Grade (Fr)</label>
+                            <input type="text" id="nomgradefr" th:field="*{nomgradefr}" class="form-control" placeholder="Saisissez la grade en français" required />
+                        </div>
+
+                        <!-- Champ Libellé Arabe -->
+                        <div class="mb-3">
+                            <label for="nomgradear" class="form-label">Grade (Ar) </label>
+                            <input type="text" id="nomgradear" th:field="*{nomgradear}" class="form-control" placeholder="Saisissez la grade en arabe" required />
+                        </div>
+
+                          <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/grades" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+ 
+</body>
+
+
+</html>

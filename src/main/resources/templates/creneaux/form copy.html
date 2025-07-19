@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+     
+</head>
+<section>
+    <div layout:fragment="content">
+        <!-- Insertion du fragment des boutons horizontaux -->
+        <div th:replace="~{fragments/boutons :: boutonsHorizontaux}"></div>
+        <h2>Saisie créneau horaire</h2>
+
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <!-- Titre dynamique basé sur l'ID -->
+                    <h4 class="mb-0"
+                        th:text="${creneau.id == 0 || creneau.id == null ? 'Ajouter un Créneau' : 'Modifier un Créneau'}">
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/creneaux/save}" th:object="${creneau}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div class="mb-3">
+                            <label for="libelleFr" class="form-label">Libellé (Fr)</label>
+                            <input type="text" id="libelleFr" th:field="*{libelleFr}" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="heureDebut" class="form-label">Heure Début</label>
+                            <input type="time" id="heureDebut" th:field="*{heureDebut}" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="heureFin" class="form-label">Heure Fin</label>
+                            <input type="time" id="heureFin" th:field="*{heureFin}" class="form-control" required />
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input type="checkbox" id="compose" th:field="*{compose}" class="form-check-input" />
+                            <label for="compose" class="form-check-label">Composé</label>
+                        </div>
+
+                        <div class="mb-3" th:if="${creneau.compose}">
+                            <label for="composedCreneaux" class="form-label">Créer à partir de créneaux existants</label>
+                            <select id="composedCreneaux" th:field="*{composedCreneaux}" class="form-select" multiple>
+                                <option th:each="creneauExistant : ${creneauxExistants}" 
+                                        th:value="${creneauExistant.id}" 
+                                        th:text="${creneauExistant.libelleFr}"></option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/creneaux" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</html>

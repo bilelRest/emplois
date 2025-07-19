@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier des Séances</title>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet" />
+
+    <!-- Moment.js (nécessaire pour FullCalendar) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+
+</head>
+<body>
+    <div id="calendar"></div>
+
+    <script>
+        // Fonction pour récupérer les séances depuis l'API Rest
+        fetch('/api/seances/all')
+            .then(response => response.json())
+            .then(data => {
+                // Configurer FullCalendar
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    events: data.map(seance => {
+                        const start = moment(seance.start); // Moment.js pour la gestion des dates
+                        const end = moment(seance.end);     // Moment.js pour la gestion des dates
+
+                        return {
+                            id: seance.id,
+                            title: `${seance.title}`,
+                            start: start.format(),
+                            end: end.format(),
+                            className: seance.className || 'default-class',
+                            description: seance.description || '',
+                        };
+                    }),
+                    editable: true,
+                    droppable: true, // Permet de déplacer les événements dans le calendrier
+                });
+            })
+            .catch(error => console.error('Erreur lors du chargement des séances:', error));
+    </script>
+</body>
+</html>

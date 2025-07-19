@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="template1">
+
+<head>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Le contenu de ton formulaire ici -->
+<section>
+    <div layout:fragment="content">
+         
+        <div class="container mt-5">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0" th:text="${menu.id == null ? 'Ajouter ' : 'Modifier '}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <form th:action="@{/menus/save}" th:object="${menu}" method="post">
+                        <!-- Champ caché pour l'ID -->
+                        <input type="hidden" th:field="*{id}" />
+                    
+                        <!-- Champ Titre -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Titre</label>
+                            <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Saisissez le titre du menu" required />
+                        </div>
+                    
+                        <!-- Champ Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" id="description" th:field="*{description}" class="form-control" placeholder="Saisissez la description du menu" required />
+                        </div>
+                    
+                        <!-- Champ Icône -->
+                        <div class="mb-3">
+                            <label for="icon" class="form-label">Icône</label>
+                            <input type="text" id="icon" th:field="*{icon}" class="form-control" placeholder="Saisissez le nom de l'icône (ex: 'fa-home')" />
+                        </div>
+                    
+                        <!-- Champ Position -->
+                        <div class="mb-3">
+                            <label for="position" class="form-label">Position</label>
+                            <input type="number" id="position" th:field="*{position}" class="form-control" placeholder="Saisissez la position du menu" required />
+                        </div>
+                    
+                        <!-- Champ Expanded -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" id="expanded" th:field="*{expanded}" class="form-check-input" />
+                            <label for="expanded" class="form-check-label">Développer le menu par défaut</label>
+                        </div>
+                    
+                        <!-- Sélection des sous-menus -->
+                        <div class="mb-3">
+                            <label for="subMenus" class="form-label">Sélection des sous-menus</label>
+                            <select id="subMenus" th:field="*{subMenus}" class="form-select select2" multiple="multiple">
+                                <option th:each="submenu : ${sousmenusExistants}" 
+                                        th:value="${submenu.id}" 
+                                        th:text="${submenu.title}" 
+                                        th:selected="${subMenus != null && subMenus.contains(submenu)}">
+                                </option>
+                            </select>
+                        </div>
+                    
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Enregistrer</button>
+                            <a href="/menus" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+ 
+
+</body>
+<th:block layout:fragment="bottom-scripts">
+
+    <th:block th:replace="~{fragments/menu-form-js :: scripts}"></th:block>  
+</th:block>
+
+</html>
