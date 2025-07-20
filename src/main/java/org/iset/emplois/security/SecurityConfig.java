@@ -38,27 +38,27 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf
                     .ignoringRequestMatchers("/delete/**", "/logout", "/detailsaus/delete/**")
-                )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                );
+               // .cors(cors -> cors.configurationSource(corsConfigurationSource()));
     
             return http.build();
         }
 
-    @Bean
-    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // ✅ Liste explicite des domaines
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://apirest.pro"));
-
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        // ✅ Liste explicite des domaines
+//        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://apirest.pro"));
+//
+//        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(List.of("*"));
+//        configuration.setAllowCredentials(true);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
 
 
